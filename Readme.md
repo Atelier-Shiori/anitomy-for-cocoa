@@ -6,7 +6,7 @@ This is a OS X port of [*Anitomy*](https://github.com/erengy/anitomy), which is 
 
 The following filename...
 
-    [TaigaSubs]_Toradora!_(2008)_-_01v2_-_Tiger_and_Dragon_[1280x720_H.264_FLAC][1234ABCD].mkv
+[TaigaSubs]_Toradora!_(2008)_-_01v2_-_Tiger_and_Dragon_[1280x720_H.264_FLAC][1234ABCD].mkv
 
 ...would be resolved into these elements:
 
@@ -35,44 +35,45 @@ The following filename...
 
 To use, simply do the following:
 ```objective-c
-    NSDictionary * d = [[anitomy_bridge alloc] tokenize:@"[Chibiki]_THE_iDOLM@STER_-_01_[720p][C83E5732].mkv"];
-    NSLog(@"%@",d);
+NSDictionary * d = [[anitomy_bridge alloc] tokenize:@"[Chibiki]_THE_iDOLM@STER_-_01_[720p][C83E5732].mkv"];
+NSLog(@"%@",d);
 ```
 It should output the following:
 ```
-	{
-	    episode = 01;
-	    group = Chibiki;
-	    releaseversion = "";
-	    title = "THE iDOLM@STER";
-	    videosource = "";
-	    videoterm = "";
-	    year = "";
-	}
-	```
+{
+episode = 01;
+group = Chibiki;
+releaseversion = "";
+title = "THE iDOLM@STER";
+videosource = "";
+videoterm = "";
+year = "";
+}
+```
+
 ## How does it work?
 
 Suppose that we're working on the following filename:
 
-    "Spice_and_Wolf_Ep01_[1080p,BluRay,x264]_-_THORA.mkv"
+"Spice_and_Wolf_Ep01_[1080p,BluRay,x264]_-_THORA.mkv"
 
 The filename is first stripped off of its extension and split into groups. Groups are determined by the position of brackets:
 
-    "Spice_and_Wolf_Ep01_", "1080p,BluRay,x264", "_-_THORA"
+"Spice_and_Wolf_Ep01_", "1080p,BluRay,x264", "_-_THORA"
 
 Each group is then split into tokens. In our current example, the delimiter for the enclosed group is `,`, while the words in other groups are separated by `_`:
 
-    "Spice", "and", "Wolf", "Ep01", "1080p", "BluRay", "x264", "-", "THORA"
+"Spice", "and", "Wolf", "Ep01", "1080p", "BluRay", "x264", "-", "THORA"
 
 Note that brackets and delimiters are actually stored as tokens. Here, identified tokens are omitted for our convenience.
 
 Once the tokenizer is done, the parser comes into effect. First, all tokens are compared against a set of known patterns and keywords. This process generally leaves us with nothing but the release group, anime title, episode number and episode title:
 
-    "Spice", "and", "Wolf", "Ep01", "-"
+"Spice", "and", "Wolf", "Ep01", "-"
 
 The next step is to look for the episode number. Each token that contains a number is analyzed. Here, `Ep01` is identified because it begins with a known episode prefix:
 
-    "Spice", "and", "Wolf", "-"
+"Spice", "and", "Wolf", "-"
 
 Finally, remaining tokens are combined to form the anime title, which is `Spice and Wolf`. The complete list of elements identified by *Anitomy* is as follows:
 
@@ -99,11 +100,11 @@ There are so many cases to cover that it's simply not possible to parse all file
 
 Yes, unfortunately. *Anitomy* fails to identify the anime title and episode number on rare occasions, mostly due to bad naming conventions. See the examples below.
 
-    Arigatou.Shuffle!.Ep08.[x264.AAC][D6E43829].mkv
+Arigatou.Shuffle!.Ep08.[x264.AAC][D6E43829].mkv
 
 Here, *Anitomy* would report that this file is the 8th episode of `Arigatou Shuffle!`, where `Arigatou` is actually the name of the fansub group.
 
-    Spice and Wolf 2
+Spice and Wolf 2
 
 Is this the 2nd episode of `Spice and Wolf`, or a batch release of `Spice and Wolf 2`? Without an extension, there's no way to know. It's up to you consider both cases.
 
