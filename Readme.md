@@ -84,6 +84,8 @@ Finally, remaining tokens are combined to form the anime title, which is `Spice 
 - Video term: *x264*
 - Release group: *THORA*
 
+You can try it for yourself by running the demo application included with this project.
+
 ## Why should I use it?
 
 Anime video files are commonly named in a format where the anime title is followed by the episode number, and all the technical details are enclosed within brackets. However, fansub groups tend to use their own naming conventions, and the problem is more complicated than it first appears:
@@ -118,7 +120,7 @@ Please consider abiding by these simple rules before deciding on your naming con
 - Use a separator between anime title and episode number, namely a dash. There are anime titles that end with a number, which creates confusion.
 - Indicate the episode interval in batch releases.
 
-##Changes to orginal code
+##Changes to original code
 String.h and String.cpp has been renamed to String2.h and String2.cpp so it will compile under Xcode.
 
 ## License

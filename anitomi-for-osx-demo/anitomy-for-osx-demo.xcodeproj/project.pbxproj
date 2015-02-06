@@ -1,0 +1,449 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6F1C87381A853F4600864FFD /* anitomy-osx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F1C87371A853F4600864FFD /* anitomy-osx.framework */; };
+		6F1C87391A853F4600864FFD /* anitomy-osx.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F1C87371A853F4600864FFD /* anitomy-osx.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6FAD52A51A853C9200DE38B8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAD52A41A853C9200DE38B8 /* AppDelegate.m */; };
+		6FAD52A71A853C9200DE38B8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAD52A61A853C9200DE38B8 /* main.m */; };
+		6FAD52A91A853C9200DE38B8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FAD52A81A853C9200DE38B8 /* Images.xcassets */; };
+		6FAD52AC1A853C9200DE38B8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FAD52AA1A853C9200DE38B8 /* MainMenu.xib */; };
+		6FAD52B81A853C9200DE38B8 /* anitomi_for_osx_demoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAD52B71A853C9200DE38B8 /* anitomi_for_osx_demoTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6FAD52B21A853C9200DE38B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6FAD52961A853C9200DE38B8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6FAD529D1A853C9200DE38B8;
+			remoteInfo = "anitomi-for-osx-demo";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6F1C873A1A853F4600864FFD /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				6F1C87391A853F4600864FFD /* anitomy-osx.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		6F1C87371A853F4600864FFD /* anitomy-osx.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = "anitomy-osx.framework"; path = "/Users/tailred/Library/Developer/Xcode/DerivedData/anitomy-osx-golueoalqymgteacvwzvxyojzfgf/Build/Products/Debug/anitomy-osx.framework"; sourceTree = "<absolute>"; };
+		6FAD529E1A853C9200DE38B8 /* anitomy-for-osx-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "anitomy-for-osx-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FAD52A21A853C9200DE38B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6FAD52A31A853C9200DE38B8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		6FAD52A41A853C9200DE38B8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		6FAD52A61A853C9200DE38B8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		6FAD52A81A853C9200DE38B8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		6FAD52AB1A853C9200DE38B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		6FAD52B11A853C9200DE38B8 /* anitomy-for-osx-demoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "anitomy-for-osx-demoTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FAD52B61A853C9200DE38B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6FAD52B71A853C9200DE38B8 /* anitomi_for_osx_demoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = anitomi_for_osx_demoTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6FAD529B1A853C9200DE38B8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6F1C87381A853F4600864FFD /* anitomy-osx.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6FAD52AE1A853C9200DE38B8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6FAD52951A853C9200DE38B8 = {
+			isa = PBXGroup;
+			children = (
+				6F1C87371A853F4600864FFD /* anitomy-osx.framework */,
+				6FAD52A01A853C9200DE38B8 /* anitomi-for-osx-demo */,
+				6FAD52B41A853C9200DE38B8 /* anitomi-for-osx-demoTests */,
+				6FAD529F1A853C9200DE38B8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6FAD529F1A853C9200DE38B8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6FAD529E1A853C9200DE38B8 /* anitomy-for-osx-demo.app */,
+				6FAD52B11A853C9200DE38B8 /* anitomy-for-osx-demoTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6FAD52A01A853C9200DE38B8 /* anitomi-for-osx-demo */ = {
+			isa = PBXGroup;
+			children = (
+				6FAD52A31A853C9200DE38B8 /* AppDelegate.h */,
+				6FAD52A41A853C9200DE38B8 /* AppDelegate.m */,
+				6FAD52A81A853C9200DE38B8 /* Images.xcassets */,
+				6FAD52AA1A853C9200DE38B8 /* MainMenu.xib */,
+				6FAD52A11A853C9200DE38B8 /* Supporting Files */,
+			);
+			path = "anitomi-for-osx-demo";
+			sourceTree = "<group>";
+		};
+		6FAD52A11A853C9200DE38B8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6FAD52A21A853C9200DE38B8 /* Info.plist */,
+				6FAD52A61A853C9200DE38B8 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		6FAD52B41A853C9200DE38B8 /* anitomi-for-osx-demoTests */ = {
+			isa = PBXGroup;
+			children = (
+				6FAD52B71A853C9200DE38B8 /* anitomi_for_osx_demoTests.m */,
+				6FAD52B51A853C9200DE38B8 /* Supporting Files */,
+			);
+			path = "anitomi-for-osx-demoTests";
+			sourceTree = "<group>";
+		};
+		6FAD52B51A853C9200DE38B8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6FAD52B61A853C9200DE38B8 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6FAD529D1A853C9200DE38B8 /* anitomy-for-osx-demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6FAD52BB1A853C9200DE38B8 /* Build configuration list for PBXNativeTarget "anitomy-for-osx-demo" */;
+			buildPhases = (
+				6FAD529A1A853C9200DE38B8 /* Sources */,
+				6FAD529B1A853C9200DE38B8 /* Frameworks */,
+				6FAD529C1A853C9200DE38B8 /* Resources */,
+				6F1C873A1A853F4600864FFD /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "anitomy-for-osx-demo";
+			productName = "anitomi-for-osx-demo";
+			productReference = 6FAD529E1A853C9200DE38B8 /* anitomy-for-osx-demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		6FAD52B01A853C9200DE38B8 /* anitomy-for-osx-demoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6FAD52BE1A853C9200DE38B8 /* Build configuration list for PBXNativeTarget "anitomy-for-osx-demoTests" */;
+			buildPhases = (
+				6FAD52AD1A853C9200DE38B8 /* Sources */,
+				6FAD52AE1A853C9200DE38B8 /* Frameworks */,
+				6FAD52AF1A853C9200DE38B8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6FAD52B31A853C9200DE38B8 /* PBXTargetDependency */,
+			);
+			name = "anitomy-for-osx-demoTests";
+			productName = "anitomi-for-osx-demoTests";
+			productReference = 6FAD52B11A853C9200DE38B8 /* anitomy-for-osx-demoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6FAD52961A853C9200DE38B8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Atelier Shiori";
+				TargetAttributes = {
+					6FAD529D1A853C9200DE38B8 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					6FAD52B01A853C9200DE38B8 = {
+						CreatedOnToolsVersion = 6.1.1;
+						TestTargetID = 6FAD529D1A853C9200DE38B8;
+					};
+				};
+			};
+			buildConfigurationList = 6FAD52991A853C9200DE38B8 /* Build configuration list for PBXProject "anitomy-for-osx-demo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 6FAD52951A853C9200DE38B8;
+			productRefGroup = 6FAD529F1A853C9200DE38B8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6FAD529D1A853C9200DE38B8 /* anitomy-for-osx-demo */,
+				6FAD52B01A853C9200DE38B8 /* anitomy-for-osx-demoTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6FAD529C1A853C9200DE38B8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6FAD52A91A853C9200DE38B8 /* Images.xcassets in Resources */,
+				6FAD52AC1A853C9200DE38B8 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6FAD52AF1A853C9200DE38B8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6FAD529A1A853C9200DE38B8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6FAD52A71A853C9200DE38B8 /* main.m in Sources */,
+				6FAD52A51A853C9200DE38B8 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6FAD52AD1A853C9200DE38B8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6FAD52B81A853C9200DE38B8 /* anitomi_for_osx_demoTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6FAD52B31A853C9200DE38B8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6FAD529D1A853C9200DE38B8 /* anitomy-for-osx-demo */;
+			targetProxy = 6FAD52B21A853C9200DE38B8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		6FAD52AA1A853C9200DE38B8 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6FAD52AB1A853C9200DE38B8 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6FAD52B91A853C9200DE38B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		6FAD52BA1A853C9200DE38B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		6FAD52BC1A853C9200DE38B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Volumes/Development,
+					"1/anitomy-osx-port/build/Debug",
+					"$(PROJECT_DIR)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/anitomy-osx-golueoalqymgteacvwzvxyojzfgf/Build/Products/Debug",
+				);
+				INFOPLIST_FILE = "anitomi-for-osx-demo/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "anitomy-for-osx-demo";
+			};
+			name = Debug;
+		};
+		6FAD52BD1A853C9200DE38B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Volumes/Development,
+					"1/anitomy-osx-port/build/Debug",
+					"$(PROJECT_DIR)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/anitomy-osx-golueoalqymgteacvwzvxyojzfgf/Build/Products/Debug",
+				);
+				INFOPLIST_FILE = "anitomi-for-osx-demo/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "anitomy-for-osx-demo";
+			};
+			name = Release;
+		};
+		6FAD52BF1A853C9200DE38B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "anitomi-for-osx-demoTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "anitomy-for-osx-demoTests";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/anitomi-for-osx-demo.app/Contents/MacOS/anitomi-for-osx-demo";
+			};
+			name = Debug;
+		};
+		6FAD52C01A853C9200DE38B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "anitomi-for-osx-demoTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "anitomy-for-osx-demoTests";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/anitomi-for-osx-demo.app/Contents/MacOS/anitomi-for-osx-demo";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6FAD52991A853C9200DE38B8 /* Build configuration list for PBXProject "anitomy-for-osx-demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6FAD52B91A853C9200DE38B8 /* Debug */,
+				6FAD52BA1A853C9200DE38B8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6FAD52BB1A853C9200DE38B8 /* Build configuration list for PBXNativeTarget "anitomy-for-osx-demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6FAD52BC1A853C9200DE38B8 /* Debug */,
+				6FAD52BD1A853C9200DE38B8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6FAD52BE1A853C9200DE38B8 /* Build configuration list for PBXNativeTarget "anitomy-for-osx-demoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6FAD52BF1A853C9200DE38B8 /* Debug */,
+				6FAD52C01A853C9200DE38B8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6FAD52961A853C9200DE38B8 /* Project object */;
+}

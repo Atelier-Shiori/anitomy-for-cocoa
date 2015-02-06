@@ -47,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6F1C87251A853D3A00864FFD /* anitomy-for-osx-demo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "anitomy-for-osx-demo.xcodeproj"; path = "anitomi-for-osx-demo/anitomy-for-osx-demo.xcodeproj"; sourceTree = "<group>"; };
 		6F6792321A851F0B00F79F5A /* options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = options.h; sourceTree = "<group>"; };
 		CEE7D4E51A1A8EFA005DB9C9 /* anitomy-osx.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "anitomy-osx.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEE7D4E81A1A8EFA005DB9C9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -111,6 +112,7 @@
 				CEE7D5031A1A8EFA005DB9C9 /* anitomy-osxTests */,
 				CEE7D4E71A1A8EFA005DB9C9 /* Frameworks */,
 				CEE7D4E61A1A8EFA005DB9C9 /* Products */,
+				6F1C87251A853D3A00864FFD /* anitomy-for-osx-demo.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
