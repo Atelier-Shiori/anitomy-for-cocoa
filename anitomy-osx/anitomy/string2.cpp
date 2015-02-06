@@ -19,7 +19,7 @@
 #include <algorithm>
 #include <functional>
 
-#include "string2.h""
+#include "string2.h"
 
 namespace anitomy {
 
@@ -35,6 +35,12 @@ bool IsHexadecimalChar(const char_t c) {
          (c >= L'a' && c <= L'f');
 }
 
+bool IsLatinChar(const char_t c) {
+  // We're just checking until the end of Latin Extended-B block, rather than
+  // all the blocks that belong to the Latin script.
+  return c <= L'\u024F';
+}
+
 bool IsNumericChar(const char_t c) {
   return c >= L'0' && c <= L'9';
 }
@@ -47,6 +53,11 @@ bool IsAlphanumericString(const string_t& str) {
 bool IsHexadecimalString(const string_t& str) {
   return !str.empty() &&
          std::all_of(str.begin(), str.end(), IsHexadecimalChar);
+}
+
+bool IsMostlyLatinString(const string_t& str) {
+  double length = str.empty() ? 1.0 : str.length();
+  return std::count_if(str.begin(), str.end(), IsLatinChar) / length >= 0.5;
 }
 
 bool IsNumericString(const string_t& str) {
@@ -88,6 +99,17 @@ int StringToInt(const string_t& str) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+void EraseString(string_t& str, const string_t& erase_this) {
+  if (erase_this.empty() || str.size() < erase_this.size())
+    return;
+
+  auto pos = str.find(erase_this);
+  while (pos != string_t::npos) {
+    str.erase(pos, erase_this.size());
+    pos = str.find(erase_this);
+  }
+}
 
 void StringToUpper(string_t& str) {
   std::transform(str.begin(), str.end(), str.begin(), ToUpper());

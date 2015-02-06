@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F6792331A851F0B00F79F5A /* options.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F6792321A851F0B00F79F5A /* options.h */; };
 		CEE7D4E91A1A8EFA005DB9C9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE7D4E81A1A8EFA005DB9C9 /* Cocoa.framework */; };
 		CEE7D4F31A1A8EFA005DB9C9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEE7D4F11A1A8EFA005DB9C9 /* InfoPlist.strings */; };
 		CEE7D4FE1A1A8EFA005DB9C9 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE7D4FD1A1A8EFA005DB9C9 /* XCTest.framework */; };
@@ -46,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6F6792321A851F0B00F79F5A /* options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = options.h; sourceTree = "<group>"; };
 		CEE7D4E51A1A8EFA005DB9C9 /* anitomy-osx.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "anitomy-osx.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEE7D4E81A1A8EFA005DB9C9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		CEE7D4EB1A1A8EFA005DB9C9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -194,6 +196,7 @@
 				CEE7D51F1A1A8F30005DB9C9 /* parser.h */,
 				CEE7D5201A1A8F30005DB9C9 /* parser_helper.cpp */,
 				CEE7D53A1A1A8FD5005DB9C9 /* string2.cpp */,
+				6F6792321A851F0B00F79F5A /* options.h */,
 				CEE7D53B1A1A8FD5005DB9C9 /* string2.h */,
 				CEE7D5211A1A8F30005DB9C9 /* parser_number.cpp */,
 				CEE7D5241A1A8F30005DB9C9 /* token.cpp */,
@@ -218,6 +221,7 @@
 				CEE7D5351A1A8F30005DB9C9 /* token.h in Headers */,
 				CEE7D53D1A1A8FD5005DB9C9 /* string2.h in Headers */,
 				CEE7D52F1A1A8F30005DB9C9 /* parser.h in Headers */,
+				6F6792331A851F0B00F79F5A /* options.h in Headers */,
 				CEE7D52B1A1A8F30005DB9C9 /* element.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

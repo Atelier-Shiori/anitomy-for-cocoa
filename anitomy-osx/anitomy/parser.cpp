@@ -24,7 +24,8 @@
 
 namespace anitomy {
 
-Parser::Parser(Elements& elements, Options& options, token_container_t& tokens)
+Parser::Parser(Elements& elements, const Options& options,
+               token_container_t& tokens)
     : elements_(elements),
       options_(options),
       tokens_(tokens) {
@@ -33,10 +34,10 @@ Parser::Parser(Elements& elements, Options& options, token_container_t& tokens)
 bool Parser::Parse() {
   SearchForKeywords();
 
-  SearchForAnimeSeason();
   SearchForAnimeYear();
 
-  if (options_.parse_episode_number)
+  if (options_.parse_episode_number &&
+      elements_.empty(kElementEpisodeNumber))
     SearchForEpisodeNumber();
 
   SearchForAnimeTitle();
@@ -54,60 +55,55 @@ bool Parser::Parse() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void Parser::SearchForKeywords() {
-  for (auto& token : tokens_) {
+  for (auto it = tokens_.begin(); it != tokens_.end(); ++it) {
+    auto& token = *it;
+
     if (token.category != kUnknown)
       continue;
 
     auto word = token.content;
     TrimString(word, L" -");
 
+    if (word.empty())
+      continue;
     // Don't bother if the word is a number that cannot be CRC
     if (word.size() != 8 && IsNumericString(word))
       continue;
 
     // Performs better than making a case-insensitive Find
     auto keyword = keyword_manager.Normalize(word);
+    ElementCategory category = kElementUnknown;
+    KeywordOptions options;
 
-    for (int i = kElementIterateFirst; i < kElementIterateLast; i++) {
-      auto category = static_cast<ElementCategory>(i);
-
-      if (!options_.parse_release_group)
-        if (category == kElementReleaseGroup)
-          continue;
+    if (keyword_manager.Find(keyword, category, options)) {
+      if (!options_.parse_release_group && category == kElementReleaseGroup)
+        continue;
       if (!IsElementCategorySearchable(category))
         continue;
-      if (IsElementCategorySingular(category))
-        if (!elements_.empty(category))
-          continue;
-
-      bool add_keyword = false;
-      KeywordOptions options;
-
-      switch (category) {
-        case kElementFileChecksum:
-          add_keyword = IsCrc32(word);
-          break;
-        case kElementVideoResolution:
-          add_keyword = IsResolution(word);
-          break;
-        default:
-          add_keyword = keyword_manager.Find(category, keyword, options);
-          break;
+      if (IsElementCategorySingular(category) && !elements_.empty(category))
+        continue;
+      if (category == kElementAnimeSeasonPrefix) {
+        CheckAnimeSeasonKeyword(it);
+        continue;
+      } else if (category == kElementEpisodePrefix) {
+        CheckEpisodeKeyword(it);
+        continue;
+      } else if (category == kElementReleaseVersion) {
+        word = word.substr(1);  // number without "v"
       }
-
-      if (add_keyword) {
-        switch (category) {
-          case kElementReleaseVersion:
-            elements_.insert(category, word.substr(1));  // number without "v"
-            break;
-          default:
-            elements_.insert(category, word);
-            break;
-        }
-        if (options.safe || token.enclosed)
-          token.category = kIdentifier;
-        break;
+    } else {
+      if (elements_.empty(kElementFileChecksum) && IsCrc32(word)) {
+        category = kElementFileChecksum;
+      } else if (elements_.empty(kElementVideoResolution) &&
+                 IsResolution(word)) {
+        category = kElementVideoResolution;
       }
+    }
+
+    if (category != kElementUnknown) {
+      elements_.insert(category, word);
+      if (options.safe || token.enclosed)
+        token.category = kIdentifier;
     }
   }
 }
@@ -115,14 +111,13 @@ void Parser::SearchForKeywords() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void Parser::SearchForEpisodeNumber() {
-  // List all tokens that contain a number
+  // List all unknown tokens that contain a number
   std::vector<size_t> tokens;
   for (size_t i = 0; i < tokens_.size(); ++i) {
     auto& token = tokens_.at(i);
-    if (token.category != kUnknown)
-      continue;  // Skip previously identified tokens
-    if (FindNumberInString(token.content) != token.content.npos)
-      tokens.push_back(i);
+    if (token.category == kUnknown)
+      if (FindNumberInString(token.content) != token.content.npos)
+        tokens.push_back(i);
   }
   if (tokens.empty())
     return;
@@ -156,31 +151,54 @@ void Parser::SearchForEpisodeNumber() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void Parser::SearchForAnimeTitle() {
+  bool enclosed_title = false;
+
   // Find the first non-enclosed unknown token
-  auto token_begin = std::find_if(tokens_.begin(), tokens_.end(),
-      [](const Token& token) {
-        return !token.enclosed && token.category == kUnknown;
-      });
+  auto token_begin = FindToken(tokens_.begin(), tokens_.end(),
+                               kFlagNotEnclosed | kFlagUnknown);
+
+  // If that doesn't work, find the first unknown token in the second enclosed
+  // group, assuming that the first one is the release group
+  if (token_begin == tokens_.end()) {
+    enclosed_title = true;
+    token_begin = tokens_.begin();
+    bool skipped_previous_group = false;
+    do {
+      token_begin = FindToken(token_begin, tokens_.end(), kFlagUnknown);
+      if (token_begin == tokens_.end())
+        break;
+      // Ignore groups that are composed of non-Latin characters
+      if (IsMostlyLatinString(token_begin->content))
+        if (skipped_previous_group)
+          break;  // Found it
+      // Get the first unknown token of the next group
+      token_begin = FindToken(token_begin, tokens_.end(), kFlagBracket);
+      token_begin = FindToken(token_begin, tokens_.end(), kFlagUnknown);
+      skipped_previous_group = true;
+    } while (token_begin != tokens_.end());
+  }
   if (token_begin == tokens_.end())
     return;
 
-  // Continue until an identifier is found
-  auto token_end = std::find_if(token_begin, tokens_.end(),
-      [](const Token& token) {
-        return token.category == kIdentifier;
-      });
+  // Continue until an identifier (or a bracket, if the title is enclosed)
+  // is found
+  auto token_end = FindToken(token_begin, tokens_.end(),
+      kFlagIdentifier | (enclosed_title ? kFlagBracket : kFlagNone));
+
   // If within the interval there's an open bracket without its matching pair,
   // move the upper endpoint back to the bracket
-  auto last_bracket = token_end;
-  bool bracket_open = false;
-  for (auto token = token_begin; token != token_end; ++token) {
-    if (token->category == kBracket) {
-      last_bracket = token;
-      bracket_open = !bracket_open;
+  if (!enclosed_title) {
+    auto last_bracket = token_end;
+    bool bracket_open = false;
+    for (auto token = token_begin; token != token_end; ++token) {
+      if (token->category == kBracket) {
+        last_bracket = token;
+        bracket_open = !bracket_open;
+      }
     }
+    if (bracket_open)
+      token_end = last_bracket;
   }
-  if (bracket_open)
-    token_end = last_bracket;
 
   // Build anime title
   BuildElement(kElementAnimeTitle, false, token_begin, token_end);
@@ -192,55 +210,41 @@ void Parser::SearchForReleaseGroup() {
 
   do {
     // Find the first enclosed unknown token
-    token_begin = std::find_if(token_end, tokens_.end(),
-        [](const Token& token) {
-          return token.enclosed && token.category == kUnknown;
-        });
+    token_begin = FindToken(token_end, tokens_.end(),
+                            kFlagEnclosed | kFlagUnknown);
     if (token_begin == tokens_.end())
-      continue;
+      return;
 
     // Continue until a bracket or identifier is found
-    token_end = std::find_if(token_begin, tokens_.end(),
-        [](const Token& token) {
-          return token.category == kBracket || token.category == kIdentifier;
-        });
+    token_end = FindToken(token_begin, tokens_.end(),
+                          kFlagBracket | kFlagIdentifier);
     if (token_end->category != kBracket)
       continue;
 
-    // Ignore if it's not the first token in group
-    auto previous_token = GetPreviousNonDelimiterToken(tokens_, token_begin);
+    // Ignore if it's not the first non-delimiter token in group
+    auto previous_token = FindPreviousToken(tokens_, token_begin,
+                                            kFlagNotDelimiter);
     if (previous_token != tokens_.end() &&
         previous_token->category != kBracket) {
       continue;
     }
 
-    // Build release group, or anime title if it wasn't found earlier
-    if (elements_.empty(kElementReleaseGroup)) {
-      BuildElement(kElementReleaseGroup, true, token_begin, token_end);
-      if (elements_.empty(kElementAnimeTitle))
-        continue;
-    } else if (elements_.empty(kElementAnimeTitle)) {
-      BuildElement(kElementAnimeTitle, false, token_begin, token_end);
-      return;
-    }
-
+    // Build release group
+    BuildElement(kElementReleaseGroup, true, token_begin, token_end);
+    return;
   } while (token_begin != tokens_.end());
 }
 
 void Parser::SearchForEpisodeTitle() {
   // Find the first non-enclosed unknown token
-  auto token_begin = std::find_if(tokens_.begin(), tokens_.end(),
-      [](const Token& token) {
-        return !token.enclosed && token.category == kUnknown;
-      });
+  auto token_begin = FindToken(tokens_.begin(), tokens_.end(),
+                               kFlagNotEnclosed | kFlagUnknown);
   if (token_begin == tokens_.end())
     return;
 
   // Continue until a bracket or identifier is found
-  auto token_end = std::find_if(token_begin, tokens_.end(),
-      [](const Token& token) {
-        return token.category == kBracket || token.category == kIdentifier;
-      });
+  auto token_end = FindToken(token_begin, tokens_.end(),
+                             kFlagBracket | kFlagIdentifier);
 
   // Build episode title
   BuildElement(kElementEpisodeTitle, false, token_begin, token_end);
@@ -248,52 +252,15 @@ void Parser::SearchForEpisodeTitle() {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void Parser::SearchForAnimeSeason() {
+void Parser::SearchForAnimeYear() {
   for (auto token = tokens_.begin(); token != tokens_.end(); ++token) {
     if (token->category != kUnknown ||
-        !IsStringEqualTo(token->content, L"Season"))
-      continue;
-
-    auto previous_token = GetPreviousNonDelimiterToken(tokens_, token);
-    if (previous_token != tokens_.end()) {
-      if (IsOrdinalNumber(previous_token->content)) {
-        elements_.insert(kElementAnimeSeason, previous_token->content);
-        previous_token->category = kIdentifier;
-        token->category = kIdentifier;
-        return;
-      }
-    }
-
-    auto next_token = GetNextNonDelimiterToken(tokens_, token);
-    if (next_token != tokens_.end()) {
-      if (IsNumericString(next_token->content)) {
-        elements_.insert(kElementAnimeSeason, next_token->content);
-        next_token->category = kIdentifier;
-        token->category = kIdentifier;
-        return;
-      }
-    }
-  }
-}
-
-void Parser::SearchForAnimeYear() {
-  auto is_bracket_token = [&](token_iterator_t token) {
-    return token != tokens_.end() && token->category == kBracket;
-  };
-
-  for (auto token = tokens_.begin(); token != tokens_.end(); ++token) {
-    if (token->category != kUnknown || !IsNumericString(token->content))
-      continue;
-
-    auto previous_token = GetPreviousNonDelimiterToken(tokens_, token);
-    if (!is_bracket_token(previous_token))
-      continue;
-    auto next_token = GetNextNonDelimiterToken(tokens_, token);
-    if (!is_bracket_token(next_token))
+        !IsNumericString(token->content) ||
+        !IsTokenIsolated(token))
       continue;
 
     auto number = StringToInt(token->content);
-    if (number > 1900 && number < 2050) {
+    if (number >= kAnimeYearMin && number <= kAnimeYearMax) {
       elements_.insert(kElementAnimeYear, token->content);
       token->category = kIdentifier;
       return;

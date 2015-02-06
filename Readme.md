@@ -28,7 +28,7 @@ The following filename...
 
 ##How to use
 1. Copy the framework to your XCode Project
-2. Add this to the header file. For Swift projects, create a [briding header file](http://swiftalicio.us/2014/11/using-cocoapods-from-swift/)
+2. Add this to the header file. For Swift projects, create a [bridging header file](http://swiftalicio.us/2014/11/using-cocoapods-from-swift/)
 ```objective-c
 #import <anitomy-osx/anitomy-objc-wrapper.h>
 ```

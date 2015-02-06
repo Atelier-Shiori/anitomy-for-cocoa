@@ -33,45 +33,8 @@ KeywordOptions::KeywordOptions(bool safe)
     : safe(safe) {
 }
 
-////////////////////////////////////////////////////////////////////////////////
-
-KeywordList::KeywordList()
-    : length_min_max_(static_cast<size_t>(-1), 0) {
-}
-
-void KeywordList::Add(const string_t& str, const KeywordOptions& options) {
-  if (str.empty())
-    return;
-
-  keys_.insert(std::make_pair(str, options));
-
-  if (str.size() > length_min_max_.second)
-    length_min_max_.second = str.size();
-  if (str.size() < length_min_max_.first)
-    length_min_max_.first = str.size();
-}
-
-bool KeywordList::Find(const string_t& str) const {
-  if (str.size() < length_min_max_.first ||
-      str.size() > length_min_max_.second)
-    return false;
-
-  return keys_.find(str) != keys_.end();
-}
-
-bool KeywordList::Find(const string_t& str, KeywordOptions& options) const {
-  if (str.size() < length_min_max_.first ||
-      str.size() > length_min_max_.second)
-    return false;
-
-  auto key = keys_.find(str);
-
-  if (key != keys_.end()) {
-    options = key->second;
-    return true;
-  }
-
-  return false;
+Keyword::Keyword(ElementCategory category, const KeywordOptions& options)
+    : category(category), options(options) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,6 +42,9 @@ bool KeywordList::Find(const string_t& str, KeywordOptions& options) const {
 KeywordManager::KeywordManager() {
   const KeywordOptions options_safe(true);
   const KeywordOptions options_unsafe(false);
+
+  Add(kElementAnimeSeasonPrefix, options_unsafe, {
+      L"SAISON", L"SEASON"});
 
   Add(kElementAnimeType, options_unsafe, {
       L"OAV", L"ONA", L"OVA", L"TV",
@@ -88,7 +54,8 @@ KeywordManager::KeywordManager() {
       // Audio channels
       L"2CH", L"5.1", L"5.1CH", L"DTS", L"DTS-ES", L"DTS5.1", L"TRUEHD5.1",
       // Audio codec
-      L"AAC", L"AC3", L"FLAC", L"MP3", L"OGG", L"VORBIS",
+      L"AAC", L"AACX2", L"AACX3", L"AACX4", L"AC3", L"FLAC", L"FLACX2",
+      L"FLACX3", L"FLACX4", L"MP3", L"OGG", L"VORBIS",
       // Audio language
       L"DUALAUDIO", L"DUAL AUDIO"});
 
@@ -133,8 +100,8 @@ KeywordManager::KeywordManager() {
       L"HDTV", L"HDTVRIP", L"TVRIP", L"TV-RIP", L"WEBCAST"});
 
   Add(kElementSubtitles, options_safe, {
-      L"ASS", L"BIG5", L"DUBBED", L"HARDSUB", L"RAW", L"SOFTSUB", L"SUB",
-      L"SUBBED", L"SUBTITLED"});
+      L"ASS", L"BIG5", L"DUB", L"DUBBED", L"HARDSUB", L"RAW", L"SOFTSUB",
+      L"SUB", L"SUBBED", L"SUBTITLED"});
 
   Add(kElementVideoTerm, options_safe, {
       // Video codec
@@ -152,27 +119,35 @@ KeywordManager::KeywordManager() {
 void KeywordManager::Add(ElementCategory category,
                          const KeywordOptions& options,
                          const std::initializer_list<string_t>& keywords) {
-  auto& keyword_list = keyword_lists_[category];
+  for (const auto& keyword : keywords) {
+    if (keyword.empty())
+      continue;
+    if (keys_.find(keyword) != keys_.end())
+      continue;
 
-  for (const auto& keyword : keywords)
-    keyword_list.Add(keyword, options);
+    auto& keys = category == kElementFileExtension ? file_extensions_ : keys_;
+    keys.insert(std::make_pair(keyword, Keyword(category, options)));
+  }
 }
 
 bool KeywordManager::Find(ElementCategory category, const string_t& str) const {
-  const auto& keyword_list = keyword_lists_.find(category);
-
-  if (keyword_list != keyword_lists_.end())
-    return keyword_list->second.Find(str);
+  auto& keys = category == kElementFileExtension ? file_extensions_ : keys_;
+  auto it = keys.find(str);
+  if (it != keys.end() && it->second.category == category)
+    return true;
 
   return false;
 }
 
-bool KeywordManager::Find(ElementCategory category, const string_t& str,
+bool KeywordManager::Find(const string_t& str, ElementCategory& category,
                           KeywordOptions& options) const {
-  const auto& keyword_list = keyword_lists_.find(category);
-
-  if (keyword_list != keyword_lists_.end())
-    return keyword_list->second.Find(str, options);
+  auto& keys = category == kElementFileExtension ? file_extensions_ : keys_;
+  auto it = keys.find(str);
+  if (it != keys.end()) {
+    category = it->second.category;
+    options = it->second.options;
+    return true;
+  }
 
   return false;
 }
