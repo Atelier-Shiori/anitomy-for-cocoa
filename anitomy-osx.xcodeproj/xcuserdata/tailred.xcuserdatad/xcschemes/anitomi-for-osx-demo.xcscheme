@@ -15,21 +15,21 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6FAD529D1A853C9200DE38B8"
-               BuildableName = "anitomi-for-osx-demo.app"
+               BuildableName = "anitomy-for-osx-demo.app"
                BlueprintName = "anitomy-for-osx-demo"
                ReferencedContainer = "container:anitomi-for-osx-demo/anitomy-for-osx-demo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "YES"
+            buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6FAD52B01A853C9200DE38B8"
-               BuildableName = "anitomi-for-osx-demoTests.xctest"
+               BuildableName = "anitomy-for-osx-demoTests.xctest"
                BlueprintName = "anitomy-for-osx-demoTests"
                ReferencedContainer = "container:anitomi-for-osx-demo/anitomy-for-osx-demo.xcodeproj">
             </BuildableReference>
@@ -47,7 +47,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6FAD52B01A853C9200DE38B8"
-               BuildableName = "anitomi-for-osx-demoTests.xctest"
+               BuildableName = "anitomy-for-osx-demoTests.xctest"
                BlueprintName = "anitomy-for-osx-demoTests"
                ReferencedContainer = "container:anitomi-for-osx-demo/anitomy-for-osx-demo.xcodeproj">
             </BuildableReference>
@@ -57,7 +57,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6FAD529D1A853C9200DE38B8"
-            BuildableName = "anitomi-for-osx-demo.app"
+            BuildableName = "anitomy-for-osx-demo.app"
             BlueprintName = "anitomy-for-osx-demo"
             ReferencedContainer = "container:anitomi-for-osx-demo/anitomy-for-osx-demo.xcodeproj">
          </BuildableReference>
@@ -76,7 +76,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6FAD529D1A853C9200DE38B8"
-            BuildableName = "anitomi-for-osx-demo.app"
+            BuildableName = "anitomy-for-osx-demo.app"
             BlueprintName = "anitomy-for-osx-demo"
             ReferencedContainer = "container:anitomi-for-osx-demo/anitomy-for-osx-demo.xcodeproj">
          </BuildableReference>
@@ -94,7 +94,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6FAD529D1A853C9200DE38B8"
-            BuildableName = "anitomi-for-osx-demo.app"
+            BuildableName = "anitomy-for-osx-demo.app"
             BlueprintName = "anitomy-for-osx-demo"
             ReferencedContainer = "container:anitomi-for-osx-demo/anitomy-for-osx-demo.xcodeproj">
          </BuildableReference>

@@ -37,6 +37,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		6FBDF4C71AA8DD0D0004FEB3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6F1C87251A853D3A00864FFD /* anitomy-for-osx-demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6FAD529E1A853C9200DE38B8;
+			remoteInfo = "anitomy-for-osx-demo";
+		};
+		6FBDF4C91AA8DD0D0004FEB3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6F1C87251A853D3A00864FFD /* anitomy-for-osx-demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6FAD52B11A853C9200DE38B8;
+			remoteInfo = "anitomy-for-osx-demoTests";
+		};
 		CEE7D5001A1A8EFA005DB9C9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CEE7D4DC1A1A8EF9005DB9C9 /* Project object */;
@@ -105,6 +119,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6FBDF4C31AA8DD0D0004FEB3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6FBDF4C81AA8DD0D0004FEB3 /* anitomy-for-osx-demo.app */,
+				6FBDF4CA1AA8DD0D0004FEB3 /* anitomy-for-osx-demoTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		CEE7D4DB1A1A8EF9005DB9C9 = {
 			isa = PBXGroup;
 			children = (
@@ -291,6 +314,12 @@
 			mainGroup = CEE7D4DB1A1A8EF9005DB9C9;
 			productRefGroup = CEE7D4E61A1A8EFA005DB9C9 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 6FBDF4C31AA8DD0D0004FEB3 /* Products */;
+					ProjectRef = 6F1C87251A853D3A00864FFD /* anitomy-for-osx-demo.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				CEE7D4E41A1A8EFA005DB9C9 /* anitomy-osx */,
@@ -298,6 +327,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		6FBDF4C81AA8DD0D0004FEB3 /* anitomy-for-osx-demo.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "anitomy-for-osx-demo.app";
+			remoteRef = 6FBDF4C71AA8DD0D0004FEB3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6FBDF4CA1AA8DD0D0004FEB3 /* anitomy-for-osx-demoTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "anitomy-for-osx-demoTests.xctest";
+			remoteRef = 6FBDF4C91AA8DD0D0004FEB3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		CEE7D4E31A1A8EFA005DB9C9 /* Resources */ = {

@@ -48,7 +48,11 @@ CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF32LE);
     NSString * videoterm = [self wstringtoNSString: elements.get(anitomy::kElementVideoTerm)];
     NSString * videosource = [self wstringtoNSString: elements.get(anitomy::kElementSource)];
     NSString * season = [self wstringtoNSString:elements.get(anitomy::kElementAnimeSeason)];
-    NSDictionary * dic = [[NSDictionary alloc] initWithObjectsAndKeys:title,@"title",episode,@"episode", episodetitle, @"episodetitle", episodetype, @"episodetype",group,@"group",year,@"year",releaseversion, @"releaseversion", videoterm,@"videoterm", videosource, @"videosource", season, @"season", nil];
+    NSString * animetype = [self wstringtoNSString:elements.get(anitomy::kElementAnimeType)];
+    NSDictionary * dic = [[NSDictionary alloc] initWithObjectsAndKeys:title,@"title",episode,@"episode", episodetitle, @"episodetitle", episodetype, @"episodetype",group,@"group",year,@"year",releaseversion, @"releaseversion", videoterm,@"videoterm", videosource, @"videosource", season, @"season", animetype, @"type", nil];
+    // Clear Elements
+    elements.clear();
+    // Return Value
     return dic;
 }
 -(NSString *)wstringtoNSString:(const std::wstring&)ws{

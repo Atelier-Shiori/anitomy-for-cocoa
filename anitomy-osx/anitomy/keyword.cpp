@@ -26,11 +26,11 @@ namespace anitomy {
 KeywordManager keyword_manager;
 
 KeywordOptions::KeywordOptions()
-    : safe(true) {
+    : safe(true), valid(true) {
 }
 
-KeywordOptions::KeywordOptions(bool safe)
-    : safe(safe) {
+KeywordOptions::KeywordOptions(bool safe, bool valid)
+    : safe(safe), valid(valid) {
 }
 
 Keyword::Keyword(ElementCategory category, const KeywordOptions& options)
@@ -40,14 +40,15 @@ Keyword::Keyword(ElementCategory category, const KeywordOptions& options)
 ////////////////////////////////////////////////////////////////////////////////
 
 KeywordManager::KeywordManager() {
-  const KeywordOptions options_safe(true);
-  const KeywordOptions options_unsafe(false);
+  const KeywordOptions options_safe(true, true);
+  const KeywordOptions options_unsafe(false, true);
+  const KeywordOptions options_invalid(true, false);
 
   Add(kElementAnimeSeasonPrefix, options_unsafe, {
       L"SAISON", L"SEASON"});
 
   Add(kElementAnimeType, options_unsafe, {
-      L"OAV", L"ONA", L"OVA", L"TV",
+      L"GEKIJOUBAN", L"MOVIE", L"OAV", L"ONA", L"OVA", L"TV",
       L"ED", L"ENDING", L"NCED", L"NCOP", L"OP", L"OPENING", L"PV"});
 
   Add(kElementAudioTerm, options_safe, {
@@ -65,13 +66,16 @@ KeywordManager::KeywordManager() {
       L"ANDROID"});
 
   Add(kElementEpisodePrefix, options_safe, {
-      L"E", L"EP", L"EP.", L"EPS", L"EPS.", L"EPISODE", L"EPISODE.",
+      L"E", L"EP", L"EP.", L"EPS", L"EPS.", L"EPISODE", L"EPISODE.", L"EPISODES",
       L"VOL", L"VOL.", L"VOLUME",
-      L"EPISODIO", L"FOLGE", L"\x7B2C"});
+      L"CAPITULO", L"EPISODIO", L"FOLGE", L"\x7B2C"});
 
   Add(kElementFileExtension, options_safe, {
       L"3GP", L"AVI", L"DIVX", L"FLV", L"M2TS", L"MKV", L"MOV", L"MP4", L"MPG",
       L"OGM", L"RM", L"RMVB", L"WMV"});
+  Add(kElementFileExtension, options_invalid, {
+      L"7Z", L"RAR", L"ZIP",
+      L"ASS", L"SRT"});
 
   Add(kElementLanguage, options_safe, {
       L"ENG", L"ENGLISH", L"ESPANOL", L"JAP", L"SPANISH", L"VOSTFR"});
@@ -86,7 +90,7 @@ KeywordManager::KeywordManager() {
       L"THORA"});
 
   Add(kElementReleaseInformation, options_safe, {
-      L"BATCH", L"COMPLETE"});
+      L"BATCH", L"COMPLETE", L"PATCH", L"REMUX"});
   Add(kElementReleaseInformation, options_unsafe, {
       L"END", L"FINAL"});  // e.g. "The End of Evangelion", "Final Approach"
 
