@@ -42,13 +42,15 @@ Keyword::Keyword(ElementCategory category, const KeywordOptions& options)
 KeywordManager::KeywordManager() {
   const KeywordOptions options_safe(true, true);
   const KeywordOptions options_unsafe(false, true);
-  const KeywordOptions options_invalid(true, false);
+  const KeywordOptions options_safe_invalid(true, false);
+  const KeywordOptions options_unsafe_invalid(false, false);
 
   Add(kElementAnimeSeasonPrefix, options_unsafe, {
       L"SAISON", L"SEASON"});
 
   Add(kElementAnimeType, options_unsafe, {
-      L"GEKIJOUBAN", L"MOVIE", L"OAV", L"ONA", L"OVA", L"TV",
+      L"GEKIJOUBAN", L"MOVIE", L"OAV", L"ONA", L"OVA", L"TV"});
+  Add(kElementAnimeType, options_unsafe_invalid, {
       L"ED", L"ENDING", L"NCED", L"NCOP", L"OP", L"OPENING", L"PV"});
 
   Add(kElementAudioTerm, options_safe, {
@@ -72,8 +74,9 @@ KeywordManager::KeywordManager() {
 
   Add(kElementFileExtension, options_safe, {
       L"3GP", L"AVI", L"DIVX", L"FLV", L"M2TS", L"MKV", L"MOV", L"MP4", L"MPG",
-      L"OGM", L"RM", L"RMVB", L"WMV"});
-  Add(kElementFileExtension, options_invalid, {
+      L"OGM", L"RM", L"RMVB", L"WEBM", L"WMV"});
+  Add(kElementFileExtension, options_safe_invalid, {
+      L"AAC", L"AIFF", L"FLAC", L"M4A", L"MP3", L"OGG", L"WAV", L"WMA",
       L"7Z", L"RAR", L"ZIP",
       L"ASS", L"SRT"});
 
@@ -108,6 +111,8 @@ KeywordManager::KeywordManager() {
       L"SUB", L"SUBBED", L"SUBTITLED"});
 
   Add(kElementVideoTerm, options_safe, {
+      // Frame rate
+      L"23.976FPS", L"24FPS", L"29.97FPS", L"30FPS", L"60FPS",
       // Video codec
       L"8BIT", L"8-BIT", L"10BIT", L"10-BIT", L"HI10P",
       L"H264", L"H.264", L"X264", L"X.264",
@@ -123,19 +128,18 @@ KeywordManager::KeywordManager() {
 void KeywordManager::Add(ElementCategory category,
                          const KeywordOptions& options,
                          const std::initializer_list<string_t>& keywords) {
+  auto& keys = GetKeywordContainer(category);
   for (const auto& keyword : keywords) {
     if (keyword.empty())
       continue;
-    if (keys_.find(keyword) != keys_.end())
+    if (keys.find(keyword) != keys.end())
       continue;
-
-    auto& keys = category == kElementFileExtension ? file_extensions_ : keys_;
     keys.insert(std::make_pair(keyword, Keyword(category, options)));
   }
 }
 
 bool KeywordManager::Find(ElementCategory category, const string_t& str) const {
-  auto& keys = category == kElementFileExtension ? file_extensions_ : keys_;
+  const auto& keys = GetKeywordContainer(category);
   auto it = keys.find(str);
   if (it != keys.end() && it->second.category == category)
     return true;
@@ -145,10 +149,14 @@ bool KeywordManager::Find(ElementCategory category, const string_t& str) const {
 
 bool KeywordManager::Find(const string_t& str, ElementCategory& category,
                           KeywordOptions& options) const {
-  auto& keys = category == kElementFileExtension ? file_extensions_ : keys_;
+  const auto& keys = GetKeywordContainer(category);
   auto it = keys.find(str);
   if (it != keys.end()) {
-    category = it->second.category;
+    if (category == kElementUnknown) {
+      category = it->second.category;
+    } else if (it->second.category != category) {
+      return false;
+    }
     options = it->second.options;
     return true;
   }
@@ -158,6 +166,13 @@ bool KeywordManager::Find(const string_t& str, ElementCategory& category,
 
 string_t KeywordManager::Normalize(const string_t& str) const {
   return StringToUpperCopy(str);
+}
+
+KeywordManager::keyword_container_t& KeywordManager::GetKeywordContainer(
+    ElementCategory category) const {
+  return category == kElementFileExtension ?
+      const_cast<keyword_container_t&>(file_extensions_) :
+      const_cast<keyword_container_t&>(keys_);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
