@@ -46,7 +46,8 @@ bool Parser::Parse() {
       elements_.empty(kElementReleaseGroup))
     SearchForReleaseGroup();
 
-  if (options_.parse_episode_title)
+  if (options_.parse_episode_title &&
+      !elements_.empty(kElementEpisodeNumber))
     SearchForEpisodeTitle();
 
   return !elements_.empty(kElementAnimeTitle);
@@ -78,7 +79,7 @@ void Parser::SearchForKeywords() {
     if (keyword_manager.Find(keyword, category, options)) {
       if (!options_.parse_release_group && category == kElementReleaseGroup)
         continue;
-      if (!IsElementCategorySearchable(category))
+      if (!IsElementCategorySearchable(category) || !options.searchable)
         continue;
       if (IsElementCategorySingular(category) && !elements_.empty(category))
         continue;
@@ -86,7 +87,8 @@ void Parser::SearchForKeywords() {
         CheckAnimeSeasonKeyword(it);
         continue;
       } else if (category == kElementEpisodePrefix) {
-        CheckEpisodeKeyword(it);
+        if (options.valid)
+          CheckEpisodeKeyword(it);
         continue;
       } else if (category == kElementReleaseVersion) {
         word = word.substr(1);  // number without "v"
@@ -102,7 +104,7 @@ void Parser::SearchForKeywords() {
 
     if (category != kElementUnknown) {
       elements_.insert(category, word);
-      if (options.safe || token.enclosed)
+      if (options.identifiable || token.enclosed)
         token.category = kIdentifier;
     }
   }
@@ -136,12 +138,16 @@ void Parser::SearchForEpisodeNumber() {
   if (tokens.empty())
     return;
 
-  // e.g. "[12]", "(2006)"
-  if (SearchForIsolatedNumbers(tokens))
+  // e.g. "01 (176)", "29 (04)"
+  if (SearchForEquivalentNumbers(tokens))
     return;
 
   // e.g. " - 08"
   if (SearchForSeparatedNumbers(tokens))
+    return;
+
+  // e.g. "[12]", "(2006)"
+  if (SearchForIsolatedNumbers(tokens))
     return;
 
   // Consider using the last number as a last resort

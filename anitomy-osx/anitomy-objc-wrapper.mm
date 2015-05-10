@@ -48,7 +48,14 @@ CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF32LE);
     NSString * videoterm = [self wstringtoNSString: elements.get(anitomy::kElementVideoTerm)];
     NSString * videosource = [self wstringtoNSString: elements.get(anitomy::kElementSource)];
     NSString * season = [self wstringtoNSString:elements.get(anitomy::kElementAnimeSeason)];
-    NSString * animetype = [self wstringtoNSString:elements.get(anitomy::kElementAnimeType)];
+    // Populate Anime Types, if exists
+    NSMutableArray * animetype = [[NSMutableArray alloc]init];
+    if (!elements.empty(anitomy::kElementAnimeType)) {
+        auto anime_types = elements.get_all(anitomy::kElementAnimeType);
+        for (const auto& anime_type : anime_types) {
+            [animetype addObject:[self wstringtoNSString:anime_type]];
+        }
+    }
     NSDictionary * dic = [[NSDictionary alloc] initWithObjectsAndKeys:title,@"title",episode,@"episode", episodetitle, @"episodetitle", episodetype, @"episodetype",group,@"group",year,@"year",releaseversion, @"releaseversion", videoterm,@"videoterm", videosource, @"videosource", season, @"season", animetype, @"type", nil];
     // Clear Elements
     elements.clear();

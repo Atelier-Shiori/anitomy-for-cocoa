@@ -25,12 +25,8 @@ namespace anitomy {
 
 KeywordManager keyword_manager;
 
-KeywordOptions::KeywordOptions()
-    : safe(true), valid(true) {
-}
-
-KeywordOptions::KeywordOptions(bool safe, bool valid)
-    : safe(safe), valid(valid) {
+KeywordOptions::KeywordOptions(bool identifiable, bool searchable, bool valid)
+    : identifiable(identifiable), searchable(searchable), valid(valid) {
 }
 
 Keyword::Keyword(ElementCategory category, const KeywordOptions& options)
@@ -40,83 +36,95 @@ Keyword::Keyword(ElementCategory category, const KeywordOptions& options)
 ////////////////////////////////////////////////////////////////////////////////
 
 KeywordManager::KeywordManager() {
-  const KeywordOptions options_safe(true, true);
-  const KeywordOptions options_unsafe(false, true);
-  const KeywordOptions options_safe_invalid(true, false);
-  const KeywordOptions options_unsafe_invalid(false, false);
+  const KeywordOptions options_default;
+  const KeywordOptions options_invalid(true, true, false);
+  const KeywordOptions options_unidentifiable(false, true, true);
+  const KeywordOptions options_unidentifiable_invalid(false, true, false);
+  const KeywordOptions options_unidentifiable_unsearchable(false, false, true);
 
-  Add(kElementAnimeSeasonPrefix, options_unsafe, {
+  Add(kElementAnimeSeasonPrefix, options_unidentifiable, {
       L"SAISON", L"SEASON"});
 
-  Add(kElementAnimeType, options_unsafe, {
-      L"GEKIJOUBAN", L"MOVIE", L"OAV", L"ONA", L"OVA", L"TV"});
-  Add(kElementAnimeType, options_unsafe_invalid, {
-      L"ED", L"ENDING", L"NCED", L"NCOP", L"OP", L"OPENING", L"PV"});
+  Add(kElementAnimeType, options_unidentifiable, {
+      L"GEKIJOUBAN", L"MOVIE",
+      L"OAD", L"OAV", L"ONA", L"OVA",
+      L"SPECIAL", L"SPECIALS",
+      L"TV"});
+  Add(kElementAnimeType, options_unidentifiable_unsearchable, {
+      L"SP"});  // e.g. "Yumeiro Patissiere SP Professional"
+  Add(kElementAnimeType, options_unidentifiable_invalid, {
+      L"ED", L"ENDING", L"NCED",
+      L"NCOP", L"OP", L"OPENING",
+      L"PREVIEW", L"PV"});
 
-  Add(kElementAudioTerm, options_safe, {
+  Add(kElementAudioTerm, options_default, {
       // Audio channels
-      L"2CH", L"5.1", L"5.1CH", L"DTS", L"DTS-ES", L"DTS5.1", L"TRUEHD5.1",
+      L"2.0CH", L"2CH", L"5.1", L"5.1CH", L"DTS", L"DTS-ES", L"DTS5.1",
+      L"TRUEHD5.1",
       // Audio codec
       L"AAC", L"AACX2", L"AACX3", L"AACX4", L"AC3", L"FLAC", L"FLACX2",
-      L"FLACX3", L"FLACX4", L"MP3", L"OGG", L"VORBIS",
+      L"FLACX3", L"FLACX4", L"LOSSLESS", L"MP3", L"OGG", L"VORBIS",
       // Audio language
       L"DUALAUDIO", L"DUAL AUDIO"});
 
-  Add(kElementDeviceCompatibility, options_safe, {
+  Add(kElementDeviceCompatibility, options_default, {
       L"IPAD3", L"IPHONE5", L"IPOD", L"PS3", L"XBOX", L"XBOX360"});
-  Add(kElementDeviceCompatibility, options_unsafe, {
+  Add(kElementDeviceCompatibility, options_unidentifiable, {
       L"ANDROID"});
 
-  Add(kElementEpisodePrefix, options_safe, {
-      L"E", L"EP", L"EP.", L"EPS", L"EPS.", L"EPISODE", L"EPISODE.", L"EPISODES",
+  Add(kElementEpisodePrefix, options_default, {
+      L"EP", L"EP.", L"EPS", L"EPS.", L"EPISODE", L"EPISODE.", L"EPISODES",
       L"VOL", L"VOL.", L"VOLUME",
-      L"CAPITULO", L"EPISODIO", L"FOLGE", L"\x7B2C"});
+      L"CAPITULO", L"EPISODIO", L"FOLGE"});
+  Add(kElementEpisodePrefix, options_invalid, {
+      L"E", L"\x7B2C"});  // single-letter episode keywords are not valid tokens
 
-  Add(kElementFileExtension, options_safe, {
+  Add(kElementFileExtension, options_default, {
       L"3GP", L"AVI", L"DIVX", L"FLV", L"M2TS", L"MKV", L"MOV", L"MP4", L"MPG",
       L"OGM", L"RM", L"RMVB", L"WEBM", L"WMV"});
-  Add(kElementFileExtension, options_safe_invalid, {
-      L"AAC", L"AIFF", L"FLAC", L"M4A", L"MP3", L"OGG", L"WAV", L"WMA",
+  Add(kElementFileExtension, options_invalid, {
+      L"AAC", L"AIFF", L"FLAC", L"M4A", L"MP3", L"MKA", L"OGG", L"WAV", L"WMA",
       L"7Z", L"RAR", L"ZIP",
       L"ASS", L"SRT"});
 
-  Add(kElementLanguage, options_safe, {
-      L"ENG", L"ENGLISH", L"ESPANOL", L"JAP", L"SPANISH", L"VOSTFR"});
-  Add(kElementLanguage, options_unsafe, {
+  Add(kElementLanguage, options_default, {
+      L"ENG", L"ENGLISH", L"ESPANOL", L"JAP", L"PT-BR", L"SPANISH", L"VOSTFR"});
+  Add(kElementLanguage, options_unidentifiable, {
       L"ESP", L"ITA"});  // e.g. "Tokyo ESP", "Bokura ga Ita"
 
-  Add(kElementOther, options_safe, {
+  Add(kElementOther, options_default, {
       L"REMASTER", L"REMASTERED", L"UNCENSORED", L"UNCUT",
       L"TS", L"VFR", L"WIDESCREEN", L"WS"});
 
-  Add(kElementReleaseGroup, options_safe, {
+  Add(kElementReleaseGroup, options_default, {
       L"THORA"});
 
-  Add(kElementReleaseInformation, options_safe, {
+  Add(kElementReleaseInformation, options_default, {
       L"BATCH", L"COMPLETE", L"PATCH", L"REMUX"});
-  Add(kElementReleaseInformation, options_unsafe, {
+  Add(kElementReleaseInformation, options_unidentifiable, {
       L"END", L"FINAL"});  // e.g. "The End of Evangelion", "Final Approach"
 
-  Add(kElementReleaseVersion, options_safe, {
+  Add(kElementReleaseVersion, options_default, {
       L"V0", L"V1", L"V2", L"V3", L"V4"});
 
-  Add(kElementSource, options_safe, {
+  Add(kElementSource, options_default, {
       L"BD", L"BDRIP", L"BLURAY", L"BLU-RAY",
       L"DVD", L"DVD5", L"DVD9", L"DVD-R2J", L"DVDRIP", L"DVD-RIP",
       L"R2DVD", L"R2J", L"R2JDVD", L"R2JDVDRIP",
-      L"HDTV", L"HDTVRIP", L"TVRIP", L"TV-RIP", L"WEBCAST"});
+      L"HDTV", L"HDTVRIP", L"TVRIP", L"TV-RIP",
+      L"WEBCAST", L"WEBRIP"});
 
-  Add(kElementSubtitles, options_safe, {
+  Add(kElementSubtitles, options_default, {
       L"ASS", L"BIG5", L"DUB", L"DUBBED", L"HARDSUB", L"RAW", L"SOFTSUB",
-      L"SUB", L"SUBBED", L"SUBTITLED"});
+      L"SOFTSUBS", L"SUB", L"SUBBED", L"SUBTITLED"});
 
-  Add(kElementVideoTerm, options_safe, {
+  Add(kElementVideoTerm, options_default, {
       // Frame rate
-      L"23.976FPS", L"24FPS", L"29.97FPS", L"30FPS", L"60FPS",
+      L"23.976FPS", L"24FPS", L"29.97FPS", L"30FPS", L"60FPS", L"120FPS",
       // Video codec
-      L"8BIT", L"8-BIT", L"10BIT", L"10-BIT", L"HI10P",
+      L"8BIT", L"8-BIT", L"10BIT", L"10BITS", L"10-BIT", L"10-BITS", L"HI10P",
       L"H264", L"H.264", L"X264", L"X.264",
-      L"AVC", L"DIVX", L"XVID",
+      L"AVC", L"DIVX", L"DIVX5", L"DIVX6", L"XVID",
       // Video format
       L"AVI", L"RMVB", L"WMV", L"WMV3", L"WMV9",
       // Video quality

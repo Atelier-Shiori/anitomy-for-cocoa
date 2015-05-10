@@ -26,10 +26,14 @@
 
 namespace anitomy {
 
+bool Parser::IsValidEpisodeNumber(const string_t& number) {
+  return StringToInt(number) <= kEpisodeNumberMax;
+}
+
 bool Parser::SetEpisodeNumber(const string_t& number, Token& token,
                               bool validate) {
   if (validate)
-    if (StringToInt(number) > kEpisodeNumberMax)
+    if (!IsValidEpisodeNumber(number))
       return false;
 
   elements_.insert(kElementEpisodeNumber, number);
@@ -103,7 +107,7 @@ typedef std::basic_regex<char_t> regex_t;
 typedef std::match_results<string_t::const_iterator> regex_match_results_t;
 
 bool Parser::MatchSingleEpisodePattern(const string_t& word, Token& token) {
-  static const regex_t pattern(L"(\\d{1,3})v(\\d)");
+  static const regex_t pattern(L"(\\d{1,3})[vV](\\d)");
   regex_match_results_t match_results;
 
   if (std::regex_match(word, match_results, pattern)) {
@@ -116,7 +120,7 @@ bool Parser::MatchSingleEpisodePattern(const string_t& word, Token& token) {
 }
 
 bool Parser::MatchMultiEpisodePattern(const string_t& word, Token& token) {
-  static const regex_t pattern(L"(\\d{1,3})[-~&+](\\d{1,3})(?:v(\\d))?");
+  static const regex_t pattern(L"(\\d{1,3})[-~&+](\\d{1,3})(?:[vV](\\d))?");
   regex_match_results_t match_results;
 
   if (std::regex_match(word, match_results, pattern)) {
@@ -158,9 +162,6 @@ bool Parser::MatchSeasonAndEpisodePattern(const string_t& word, Token& token) {
 }
 
 bool Parser::MatchTypeAndEpisodePattern(const string_t& word, Token& token) {
-  if (!elements_.empty(kElementAnimeType))
-    return false;
-
   size_t number_begin = FindNumberInString(word);
   auto prefix = word.substr(0, number_begin);
 
@@ -178,7 +179,7 @@ bool Parser::MatchTypeAndEpisodePattern(const string_t& word, Token& token) {
         // Split token (we do this last in order to avoid invalidating our
         // token reference earlier)
         token.content = number;
-        tokens_.insert(it, Token(options.safe ? kIdentifier : kUnknown,
+        tokens_.insert(it, Token(options.identifiable ? kIdentifier : kUnknown,
                                  prefix, token.enclosed));
       }
       return true;
@@ -206,13 +207,33 @@ bool Parser::MatchPartialEpisodePattern(const string_t& word, Token& token) {
   auto suffix_length = std::distance(it, word.end());
 
   auto is_valid_suffix = [](const char_t c) {
-    return (c >= L'A' && c <= L'F') ||
-           (c >= L'a' && c <= L'f');
+    return (c >= L'A' && c <= L'C') ||
+           (c >= L'a' && c <= L'c');
   };
 
   if (suffix_length == 1 && is_valid_suffix(*it))
     if (SetEpisodeNumber(word, token, true))
       return true;
+
+  return false;
+}
+
+bool Parser::MatchNumberSignPattern(const string_t& word, Token& token) {
+  if (word.front() != L'#')
+    return false;
+
+  static const regex_t pattern(L"#(\\d{1,3})(?:[-~&+](\\d{1,3}))?(?:[vV](\\d))?");
+  regex_match_results_t match_results;
+
+  if (std::regex_match(word, match_results, pattern)) {
+    if (SetEpisodeNumber(match_results[1].str(), token, true)) {
+      if (match_results[2].matched)
+        SetEpisodeNumber(match_results[2].str(), token, false);
+      if (match_results[3].matched)
+        elements_.insert(kElementReleaseVersion, match_results[3].str());
+      return true;
+    }
+  }
 
   return false;
 }
@@ -266,6 +287,10 @@ bool Parser::MatchEpisodePatterns(string_t word, Token& token) {
   if (numeric_front && !numeric_back)
     if (MatchPartialEpisodePattern(word, token))
       return true;
+  // e.g. "#01", "#02-03v2"
+  if (numeric_back)
+    if (MatchNumberSignPattern(word, token))
+      return true;
   // U+8A71 is used as counter for stories, episodes of TV series, etc.
   if (numeric_front)
     if (MatchJapaneseCounterPattern(word, token))
@@ -276,12 +301,50 @@ bool Parser::MatchEpisodePatterns(string_t word, Token& token) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+bool Parser::SearchForEquivalentNumbers(std::vector<size_t>& tokens) {
+  for (auto token_index = tokens.begin();
+       token_index != tokens.end(); ++token_index) {
+    auto token = tokens_.begin() + *token_index;
+
+    if (IsTokenIsolated(token))
+      continue;
+
+    // Find the first enclosed, non-delimiter token
+    auto next_token = FindNextToken(tokens_, token, kFlagNotDelimiter);
+    if (next_token != tokens_.end() &&
+        next_token->category == kBracket) {
+      next_token = FindNextToken(tokens_, next_token,
+                                 kFlagEnclosed | kFlagNotDelimiter);
+    } else {
+      continue;
+    }
+
+    // See if it's an isolated number
+    if (next_token != tokens_.end() &&
+        next_token->category == kUnknown &&
+        IsTokenIsolated(next_token) &&
+        IsNumericString(next_token->content)) {
+      if (IsValidEpisodeNumber(token->content) &&
+          IsValidEpisodeNumber(next_token->content)) {
+        auto lower_token =
+            StringToInt(token->content) < StringToInt(next_token->content) ?
+            token : next_token;
+        SetEpisodeNumber(lower_token->content, *token, false);
+        next_token->category = kIdentifier;
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 bool Parser::SearchForIsolatedNumbers(std::vector<size_t>& tokens) {
   for (auto token_index = tokens.begin();
        token_index != tokens.end(); ++token_index) {
     auto token = tokens_.begin() + *token_index;
 
-    if (!IsTokenIsolated(token))
+    if (!token->enclosed || !IsTokenIsolated(token))
       continue;
 
     if (SetEpisodeNumber(token->content, *token, true))
@@ -325,17 +388,19 @@ bool Parser::SearchForLastNumber(std::vector<size_t>& tokens) {
     if (token->enclosed)
       continue;
 
-    // Ignore if it's the first non-enclosed token
-    if (std::all_of(tokens_.begin(), tokens_.begin() + token_index,
-            [](const Token& token) { return token.enclosed; }))
+    // Ignore if it's the first non-enclosed, non-delimiter token
+    if (std::all_of(tokens_.begin(), token, [](const Token& token) {
+            return token.enclosed || token.category == kDelimiter; }))
       continue;
 
-    // Check if the previous token is "Movie"
+    // Ignore if the previous token is "Movie" or "Part"
     auto previous_token = FindPreviousToken(tokens_, token, kFlagNotDelimiter);
     if (previous_token != tokens_.end() &&
-        previous_token->category == kUnknown &&
-        IsStringEqualTo(previous_token->content, L"Movie")) {
-      continue;
+        previous_token->category == kUnknown) {
+      if (IsStringEqualTo(previous_token->content, L"Movie") ||
+          IsStringEqualTo(previous_token->content, L"Part")) {
+        continue;
+      }
     }
 
     // We'll use this number after all
