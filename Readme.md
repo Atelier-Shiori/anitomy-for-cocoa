@@ -125,4 +125,4 @@ String.h and String.cpp has been renamed to String2.h and String2.cpp so it will
 
 ## License
 
-The port of *Anitomy* for Cocoa is licensed under the same license as the [orginal code](https://github.com/erengy/anitomy), [GNU General Public License v3](https://www.gnu.org/licenses/gpl-3.0.html). Anitomy is by Eren Okka.
+The port of *Anitomy* for Cocoa is licensed under the same license as the [orginal code](https://github.com/erengy/anitomy), Mozilla Public License 2.0. Anitomy is by Eren Okka.

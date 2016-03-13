@@ -1,19 +1,9 @@
 /*
-** Anitomy
-** Copyright (C) 2014-2015, Eren Okka
-** 
-** This program is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
-** (at your option) any later version.
-** 
-** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-** GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+** Copyright (c) 2014-2016, Eren Okka
+**
+** This Source Code Form is subject to the terms of the Mozilla Public
+** License, v. 2.0. If a copy of the MPL was not distributed with this
+** file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
 #include <algorithm>
@@ -36,8 +26,7 @@ bool Parser::Parse() {
 
   SearchForIsolatedNumbers();
 
-  if (options_.parse_episode_number &&
-      elements_.empty(kElementEpisodeNumber))
+  if (options_.parse_episode_number)
     SearchForEpisodeNumber();
 
   SearchForAnimeTitle();
@@ -49,6 +38,8 @@ bool Parser::Parse() {
   if (options_.parse_episode_title &&
       !elements_.empty(kElementEpisodeNumber))
     SearchForEpisodeTitle();
+
+  ValidateElements();
 
   return !elements_.empty(kElementAnimeTitle);
 }
@@ -88,10 +79,13 @@ void Parser::SearchForKeywords() {
         continue;
       } else if (category == kElementEpisodePrefix) {
         if (options.valid)
-          CheckEpisodeKeyword(it);
+          CheckExtentKeyword(kElementEpisodeNumber, it);
         continue;
       } else if (category == kElementReleaseVersion) {
         word = word.substr(1);  // number without "v"
+      } else if (category == kElementVolumePrefix) {
+        CheckExtentKeyword(kElementVolumeNumber, it);
+        continue;
       }
     } else {
       if (elements_.empty(kElementFileChecksum) && IsCrc32(word)) {
@@ -124,9 +118,14 @@ void Parser::SearchForEpisodeNumber() {
   if (tokens.empty())
     return;
 
+  found_episode_keywords_ = !elements_.empty(kElementEpisodeNumber);
+
   // If a token matches a known episode pattern, it has to be the episode number
   if (SearchForEpisodePatterns(tokens))
     return;
+
+  if (!elements_.empty(kElementEpisodeNumber))
+    return;  // We have previously found an episode number via keywords
 
   // From now on, we're only interested in numeric tokens
   auto not_numeric_string = [&](size_t index) -> bool {
@@ -204,6 +203,21 @@ void Parser::SearchForAnimeTitle() {
     }
     if (bracket_open)
       token_end = last_bracket;
+  }
+
+  // If the interval ends with an enclosed group (e.g. "Anime Title [Fansub]"),
+  // move the upper endpoint back to the beginning of the group. We ignore
+  // parentheses in order to keep certain groups (e.g. "(TV)") intact.
+  if (!enclosed_title) {
+    auto token = FindPreviousToken(tokens_, token_end, kFlagNotDelimiter);
+    while (CheckTokenCategory(token, kBracket) &&
+           token->content.front() != ')') {
+      token = FindPreviousToken(tokens_, token, kFlagBracket);
+      if (token != tokens_.end()) {
+        token_end = token;
+        token = FindPreviousToken(tokens_, token_end, kFlagNotDelimiter);
+      }
+    }
   }
 
   // Build anime title
@@ -286,6 +300,33 @@ void Parser::SearchForIsolatedNumbers() {
         token->category = kIdentifier;
         continue;
       }
+    }
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void Parser::ValidateElements() {
+  // Validate anime type and episode title
+  if (!elements_.empty(kElementAnimeType) &&
+      !elements_.empty(kElementEpisodeTitle)) {
+    // Here we check whether the episode title contains an anime type
+    const auto& episode_title = elements_.get(kElementEpisodeTitle);
+    for (auto it = elements_.begin(); it != elements_.end(); ) {
+      if (it->first == kElementAnimeType) {
+        if (IsInString(episode_title, it->second)) {
+          if (episode_title.size() == it->second.size()) {
+            elements_.erase(kElementEpisodeTitle);  // invalid episode title
+          } else {
+            const auto keyword = keyword_manager.Normalize(it->second);
+            if (keyword_manager.Find(kElementAnimeType, keyword)) {
+              it = elements_.erase(it);  // invalid anime type
+              continue;
+            }
+          }
+        }
+      }
+      ++it;
     }
   }
 }

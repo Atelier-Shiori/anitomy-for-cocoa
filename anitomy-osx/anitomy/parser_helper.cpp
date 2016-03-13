@@ -1,19 +1,9 @@
 /*
-** Anitomy
-** Copyright (C) 2014-2015, Eren Okka
-** 
-** This program is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
-** (at your option) any later version.
-** 
-** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-** GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+** Copyright (c) 2014-2016, Eren Okka
+**
+** This Source Code Form is subject to the terms of the Mozilla Public
+** License, v. 2.0. If a copy of the MPL was not distributed with this
+** file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
 #include <algorithm>
@@ -123,14 +113,24 @@ bool Parser::CheckAnimeSeasonKeyword(const token_iterator_t token) {
   return false;
 }
 
-bool Parser::CheckEpisodeKeyword(const token_iterator_t token) {
+bool Parser::CheckExtentKeyword(ElementCategory category,
+                                const token_iterator_t token) {
   auto next_token = FindNextToken(tokens_, token, kFlagNotDelimiter);
 
-  if (next_token != tokens_.end() &&
-      next_token->category == kUnknown) {
+  if (CheckTokenCategory(next_token, kUnknown)) {
     if (FindNumberInString(next_token->content) == 0) {
-      if (!MatchEpisodePatterns(next_token->content, *next_token))
-        SetEpisodeNumber(next_token->content, *next_token, false);
+      switch (category) {
+        case kElementEpisodeNumber:
+          if (!MatchEpisodePatterns(next_token->content, *next_token))
+            SetEpisodeNumber(next_token->content, *next_token, false);
+          break;
+        case kElementVolumeNumber:
+          if (!MatchVolumePatterns(next_token->content, *next_token))
+            SetVolumeNumber(next_token->content, *next_token, false);
+          break;
+        default:
+          return false;
+      }
       token->category = kIdentifier;
       return true;
     }
@@ -158,6 +158,7 @@ bool Parser::IsElementCategorySearchable(ElementCategory category) {
     case kElementSubtitles:
     case kElementVideoResolution:
     case kElementVideoTerm:
+    case kElementVolumePrefix:
       return true;
   }
 
@@ -227,13 +228,18 @@ void Parser::BuildElement(ElementCategory category, bool keep_delimiters,
 
 ////////////////////////////////////////////////////////////////////////////////
 
+bool Parser::CheckTokenCategory(const token_iterator_t token,
+                                TokenCategory category) const {
+  return token != tokens_.end() && token->category == category;
+}
+
 bool Parser::IsTokenIsolated(const token_iterator_t token) const {
   auto previous_token = FindPreviousToken(tokens_, token, kFlagNotDelimiter);
-  if (previous_token == tokens_.end() || previous_token->category != kBracket)
+  if (!CheckTokenCategory(previous_token, kBracket))
     return false;
 
   auto next_token = FindNextToken(tokens_, token, kFlagNotDelimiter);
-  if (next_token == tokens_.end() || next_token->category != kBracket)
+  if (!CheckTokenCategory(next_token, kBracket))
     return false;
 
   return true;

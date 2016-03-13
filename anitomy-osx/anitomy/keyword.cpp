@@ -1,19 +1,9 @@
 /*
-** Anitomy
-** Copyright (C) 2014-2015, Eren Okka
-** 
-** This program is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
-** (at your option) any later version.
-** 
-** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-** GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+** Copyright (c) 2014-2016, Eren Okka
+**
+** This Source Code Form is subject to the terms of the Mozilla Public
+** License, v. 2.0. If a copy of the MPL was not distributed with this
+** file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
 #include <algorithm>
@@ -74,7 +64,6 @@ KeywordManager::KeywordManager() {
 
   Add(kElementEpisodePrefix, options_default, {
       L"EP", L"EP.", L"EPS", L"EPS.", L"EPISODE", L"EPISODE.", L"EPISODES",
-      L"VOL", L"VOL.", L"VOLUME",
       L"CAPITULO", L"EPISODIO", L"FOLGE"});
   Add(kElementEpisodePrefix, options_invalid, {
       L"E", L"\x7B2C"});  // single-letter episode keywords are not valid tokens
@@ -131,6 +120,9 @@ KeywordManager::KeywordManager() {
       L"HQ", L"LQ",
       // Video resolution
       L"HD", L"SD"});
+
+  Add(kElementVolumePrefix, options_default, {
+      L"VOL", L"VOL.", L"VOLUME"});
 }
 
 void KeywordManager::Add(ElementCategory category,

@@ -1,19 +1,9 @@
 /*
-** Anitomy
-** Copyright (C) 2014-2015, Eren Okka
-** 
-** This program is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
-** (at your option) any later version.
-** 
-** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-** GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+** Copyright (c) 2014-2016, Eren Okka
+**
+** This Source Code Form is subject to the terms of the Mozilla Public
+** License, v. 2.0. If a copy of the MPL was not distributed with this
+** file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
 #include <algorithm>
@@ -32,27 +22,78 @@ bool Parser::IsValidEpisodeNumber(const string_t& number) {
 
 bool Parser::SetEpisodeNumber(const string_t& number, Token& token,
                               bool validate) {
+  if (validate && !IsValidEpisodeNumber(number))
+    return false;
+
+  token.category = kIdentifier;
+
+  auto category = kElementEpisodeNumber;
+
+  // Handle equivalent numbers
+  if (found_episode_keywords_) {
+    for (auto& element : elements_) {
+      if (element.first != kElementEpisodeNumber)
+        continue;
+      // The larger number gets to be the alternative one
+      const int comparison = StringToInt(number) - StringToInt(element.second);
+      if (comparison > 0) {
+        category = kElementEpisodeNumberAlt;
+      } else if (comparison < 0) {
+        element.first = kElementEpisodeNumberAlt;
+      } else {
+        return false;  // No need to add the same number twice
+      }
+      break;
+    }
+  }
+
+  elements_.insert(category, number);
+  return true;
+}
+
+bool Parser::SetAlternativeEpisodeNumber(const string_t& number, Token& token) {
+  elements_.insert(kElementEpisodeNumberAlt, number);
+  token.category = kIdentifier;
+
+  return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+bool Parser::IsValidVolumeNumber(const string_t& number) {
+  return StringToInt(number) <= kVolumeNumberMax;
+}
+
+bool Parser::SetVolumeNumber(const string_t& number, Token& token,
+                             bool validate) {
   if (validate)
-    if (!IsValidEpisodeNumber(number))
+    if (!IsValidVolumeNumber(number))
       return false;
 
-  elements_.insert(kElementEpisodeNumber, number);
+  elements_.insert(kElementVolumeNumber, number);
   token.category = kIdentifier;
   return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool Parser::NumberComesAfterEpisodePrefix(Token& token) {
+bool Parser::NumberComesAfterPrefix(ElementCategory category, Token& token) {
   size_t number_begin = FindNumberInString(token.content);
   auto prefix = keyword_manager.Normalize(token.content.substr(0, number_begin));
 
-  if (keyword_manager.Find(kElementEpisodePrefix, prefix)) {
+  if (keyword_manager.Find(category, prefix)) {
     auto number = token.content.substr(
         number_begin, token.content.length() - number_begin);
-    if (!MatchEpisodePatterns(number, token))
-      SetEpisodeNumber(number, token, false);
-    return true;
+    switch (category) {
+      case kElementEpisodePrefix:
+        if (!MatchEpisodePatterns(number, token))
+          SetEpisodeNumber(number, token, false);
+        return true;
+      case kElementVolumePrefix:
+        if (!MatchVolumePatterns(number, token))
+          SetVolumeNumber(number, token, false);
+        return true;
+    }
   }
 
   return false;
@@ -85,9 +126,11 @@ bool Parser::SearchForEpisodePatterns(std::vector<size_t>& tokens) {
     bool numeric_front = IsNumericChar(token->content.front());
 
     if (!numeric_front) {
-      // e.g. "EP.01"
-      if (NumberComesAfterEpisodePrefix(*token))
+      // e.g. "EP.1", "Vol.1"
+      if (NumberComesAfterPrefix(kElementEpisodePrefix, *token))
         return true;
+      if (NumberComesAfterPrefix(kElementVolumePrefix, *token))
+        continue;
     } else {
       // e.g. "8 of 12"
       if (NumberComesBeforeTotalNumber(token))
@@ -120,18 +163,21 @@ bool Parser::MatchSingleEpisodePattern(const string_t& word, Token& token) {
 }
 
 bool Parser::MatchMultiEpisodePattern(const string_t& word, Token& token) {
-  static const regex_t pattern(L"(\\d{1,3})[-~&+](\\d{1,3})(?:[vV](\\d))?");
+  static const regex_t pattern(L"(\\d{1,3})(?:[vV](\\d))?[-~&+]"
+                               L"(\\d{1,3})(?:[vV](\\d))?");
   regex_match_results_t match_results;
 
   if (std::regex_match(word, match_results, pattern)) {
     auto lower_bound = match_results[1].str();
-    auto upper_bound = match_results[2].str();
+    auto upper_bound = match_results[3].str();
     // Avoid matching expressions such as "009-1" or "5-2"
     if (StringToInt(lower_bound) < StringToInt(upper_bound)) {
       if (SetEpisodeNumber(lower_bound, token, true)) {
         SetEpisodeNumber(upper_bound, token, false);
-        if (match_results[3].matched)
-          elements_.insert(kElementReleaseVersion, match_results[3].str());
+        if (match_results[2].matched)
+          elements_.insert(kElementReleaseVersion, match_results[2].str());
+        if (match_results[4].matched)
+          elements_.insert(kElementReleaseVersion, match_results[4].str());
         return true;
       }
     }
@@ -301,39 +347,94 @@ bool Parser::MatchEpisodePatterns(string_t word, Token& token) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+bool Parser::MatchSingleVolumePattern(const string_t& word, Token& token) {
+  static const regex_t pattern(L"(\\d{1,2})[vV](\\d)");
+  regex_match_results_t match_results;
+
+  if (std::regex_match(word, match_results, pattern)) {
+    SetVolumeNumber(match_results[1].str(), token, false);
+    elements_.insert(kElementReleaseVersion, match_results[2].str());
+    return true;
+  }
+
+  return false;
+}
+
+bool Parser::MatchMultiVolumePattern(const string_t& word, Token& token) {
+  static const regex_t pattern(L"(\\d{1,2})[-~&+](\\d{1,2})(?:[vV](\\d))?");
+  regex_match_results_t match_results;
+
+  if (std::regex_match(word, match_results, pattern)) {
+    auto lower_bound = match_results[1].str();
+    auto upper_bound = match_results[2].str();
+    if (StringToInt(lower_bound) < StringToInt(upper_bound)) {
+      if (SetVolumeNumber(lower_bound, token, true)) {
+        SetVolumeNumber(upper_bound, token, false);
+        if (match_results[3].matched)
+          elements_.insert(kElementReleaseVersion, match_results[3].str());
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+bool Parser::MatchVolumePatterns(string_t word, Token& token) {
+  // All patterns contain at least one non-numeric character
+  if (IsNumericString(word))
+    return false;
+
+  TrimString(word, L" -");
+
+  const bool numeric_front = IsNumericChar(word.front());
+  const bool numeric_back = IsNumericChar(word.back());
+
+  // e.g. "01v2"
+  if (numeric_front && numeric_back)
+    if (MatchSingleVolumePattern(word, token))
+      return true;
+  // e.g. "01-02", "03-05v2"
+  if (numeric_front && numeric_back)
+    if (MatchMultiVolumePattern(word, token))
+      return true;
+
+  return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 bool Parser::SearchForEquivalentNumbers(std::vector<size_t>& tokens) {
   for (auto token_index = tokens.begin();
        token_index != tokens.end(); ++token_index) {
     auto token = tokens_.begin() + *token_index;
 
-    if (IsTokenIsolated(token))
+    if (IsTokenIsolated(token) || !IsValidEpisodeNumber(token->content))
       continue;
 
     // Find the first enclosed, non-delimiter token
     auto next_token = FindNextToken(tokens_, token, kFlagNotDelimiter);
-    if (next_token != tokens_.end() &&
-        next_token->category == kBracket) {
-      next_token = FindNextToken(tokens_, next_token,
-                                 kFlagEnclosed | kFlagNotDelimiter);
-    } else {
+    if (!CheckTokenCategory(next_token, kBracket))
       continue;
-    }
+    next_token = FindNextToken(tokens_, next_token,
+                               kFlagEnclosed | kFlagNotDelimiter);
+    if (!CheckTokenCategory(next_token, kUnknown))
+      continue;
 
-    // See if it's an isolated number
-    if (next_token != tokens_.end() &&
-        next_token->category == kUnknown &&
-        IsTokenIsolated(next_token) &&
-        IsNumericString(next_token->content)) {
-      if (IsValidEpisodeNumber(token->content) &&
-          IsValidEpisodeNumber(next_token->content)) {
-        auto lower_token =
-            StringToInt(token->content) < StringToInt(next_token->content) ?
-            token : next_token;
-        SetEpisodeNumber(lower_token->content, *token, false);
-        next_token->category = kIdentifier;
-        return true;
-      }
-    }
+    // Check if it's an isolated number
+    if (!IsTokenIsolated(next_token) ||
+        !IsNumericString(next_token->content) ||
+        !IsValidEpisodeNumber(next_token->content))
+      continue;
+
+    auto minmax = std::minmax(token, next_token,
+        [](const token_iterator_t& a, const token_iterator_t& b) {
+          return StringToInt(a->content) < StringToInt(b->content);
+        });
+    SetEpisodeNumber(minmax.first->content, *minmax.first, false);
+    SetAlternativeEpisodeNumber(minmax.second->content, *minmax.second);
+
+    return true;
   }
 
   return false;
@@ -361,8 +462,7 @@ bool Parser::SearchForSeparatedNumbers(std::vector<size_t>& tokens) {
     auto previous_token = FindPreviousToken(tokens_, token, kFlagNotDelimiter);
 
     // See if the number has a preceding "-" separator
-    if (previous_token != tokens_.end() &&
-        previous_token->category == kUnknown &&
+    if (CheckTokenCategory(previous_token, kUnknown) &&
         IsDashCharacter(previous_token->content)) {
       if (SetEpisodeNumber(token->content, *token, true)) {
         previous_token->category = kIdentifier;
@@ -395,8 +495,7 @@ bool Parser::SearchForLastNumber(std::vector<size_t>& tokens) {
 
     // Ignore if the previous token is "Movie" or "Part"
     auto previous_token = FindPreviousToken(tokens_, token, kFlagNotDelimiter);
-    if (previous_token != tokens_.end() &&
-        previous_token->category == kUnknown) {
+    if (CheckTokenCategory(previous_token, kUnknown)) {
       if (IsStringEqualTo(previous_token->content, L"Movie") ||
           IsStringEqualTo(previous_token->content, L"Part")) {
         continue;
