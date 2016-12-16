@@ -230,6 +230,25 @@ void Tokenizer::ValidateDelimiterTokens() {
           append_token_to(token, prev_token);
         }
       }
+    } else if (is_delimiter_token(prev_token) &&
+               is_delimiter_token(next_token)) {
+      const auto prev_delimiter = prev_token->content.front();
+      const auto next_delimiter = next_token->content.front();
+      if (prev_delimiter == next_delimiter &&
+          prev_delimiter != delimiter) {
+        token->category = kUnknown;  // e.g. "&" in "_&_"
+      }
+    }
+
+    // Check for other special cases
+    if (delimiter == '&' || delimiter == '+') {
+      if (is_unknown_token(prev_token) && is_unknown_token(next_token)) {
+        if (IsNumericString(prev_token->content) &&
+            IsNumericString(next_token->content)) {
+          append_token_to(token, prev_token);
+          append_token_to(next_token, prev_token);  // e.g. "01+02"
+        }
+      }
     }
   }
 
