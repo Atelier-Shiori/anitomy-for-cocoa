@@ -8,7 +8,7 @@ The following filename...
 
 [TaigaSubs]_Toradora!_(2008)_-_01v2_-_Tiger_and_Dragon_[1280x720_H.264_FLAC][1234ABCD].mkv
 
-...would be resolved into these elements:
+...is resolved into these elements:
 
 - Release group: *TaigaSubs*
 - Anime title: *Toradora!*
@@ -41,14 +41,14 @@ NSLog(@"%@",d);
 ```
 
 ##Swift
-1.Copy the framework to your XCode Project
-2.Create a [bridging header file](http://swiftalicio.us/2014/11/using-cocoapods-from-swift/) (e.g. Anitomy-Bridging-Header.h).
+1. Copy the framework to your XCode Project
+2. Create a [bridging header file](http://swiftalicio.us/2014/11/using-cocoapods-from-swift/) (e.g. Anitomy-Bridging-Header.h).
 3. Click on your Swift Project and go to Build Settings. Set Install Objective-C Compatability Header to yes and add the bridging header to Objective-C Bridging Header (e.g. anitomy-swift-demo/Anitomy-Bridging_header.h)
 
 To use, simply do the following:
 ```swift
-        let d = anitomy_bridge().tokenize("[Chibiki]_THE_iDOLM@STER_-_01_[720p][C83E5732].mkv")
-        print(String(format: "%@", d!))
+let d = anitomy_bridge().tokenize("[Chibiki]_THE_iDOLM@STER_-_01_[720p][C83E5732].mkv")
+print(String(format: "%@", d!))
 ```
 
 
@@ -98,8 +98,6 @@ Finally, remaining tokens are combined to form the anime title, which is `Spice 
 - Video term: *x264*
 - Release group: *THORA*
 
-You can try it for yourself by running the demo application included with this project.
-
 ## Why should I use it?
 
 Anime video files are commonly named in a format where the anime title is followed by the episode number, and all the technical details are enclosed within brackets. However, fansub groups tend to use their own naming conventions, and the problem is more complicated than it first appears:
@@ -110,7 +108,7 @@ Anime video files are commonly named in a format where the anime title is follow
 - Space and underscore are not the only delimiters in use.
 - A single filename may contain multiple delimiters.
 
-There are so many cases to cover that it's simply not possible to parse all filenames solely with regular expressions. *Anitomy* tries a different approach, and it succeeds: It's able to parse tens of thousands of filenames per second, with almost perfect accuracy.
+There are so many cases to cover that it's simply not possible to parse all filenames solely with regular expressions. *Anitomy* tries a different approach, and it succeeds: It's able to parse tens of thousands of filenames per second, with great accuracy.
 
 ## Are there any exceptions?
 
@@ -122,7 +120,7 @@ Here, *Anitomy* would report that this file is the 8th episode of `Arigatou Shuf
 
 Spice and Wolf 2
 
-Is this the 2nd episode of `Spice and Wolf`, or a batch release of `Spice and Wolf 2`? Without an extension, there's no way to know. It's up to you consider both cases.
+Is this the 2nd episode of `Spice and Wolf`, or a batch release of `Spice and Wolf 2`? Without a file extension, there's no way to know. It's up to you consider both cases.
 
 ## Suggestions to fansub groups
 
@@ -131,8 +129,17 @@ Please consider abiding by these simple rules before deciding on your naming con
 - Don't enclose anime title, episode number and episode title within brackets. Enclose everything else, including the name of your group.
 - Don't use parentheses to enclose release information; use square brackets instead. Parentheses should only be used if they are a part of the anime/episode title.
 - Don't use multiple delimiters in a single filename. If possible, stick with either space or underscore.
-- Use a separator between anime title and episode number, namely a dash. There are anime titles that end with a number, which creates confusion.
+- Use a separator (e.g. a dash) between anime title and episode number. There are anime titles that end with a number, which creates ambiguity.
 - Indicate the episode interval in batch releases.
+
+## Who uses Anitomy for Cocoa?
+The following projects use the Cocoa port of Anitomy.
+- [MAL Updater OS X](https://github.com/Atelier-Shiori/malupdaterosx-cocoa)
+- [Hachidori](https://github.com/Atelier-Shiori/hachidori)
+
+## Other Ports of Anitomy
+- [anitomy-node](https://github.com/arkenthera/anitomy-node) - Anitomy for Node
+- [anitomyJ](https://github.com/Vorror/anitomyJ) - Anitomy for Java
 
 ##Changes to original code
 String.h and String.cpp has been renamed to String2.h and String2.cpp so it will compile under Xcode.
