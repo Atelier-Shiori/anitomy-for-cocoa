@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <anitomy-osx/anitomy-objc-wrapper.h>
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSWindowDelegate>{
         IBOutlet NSTextView * output;

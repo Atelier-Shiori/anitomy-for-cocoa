@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		59BBCDEF1C6FDD4400C40094 /* anitomy-osx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59BBCDEE1C6FDD4400C40094 /* anitomy-osx.framework */; };
-		59BBCDF11C6FDD7300C40094 /* anitomy-osx.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 59BBCDF01C6FDD7300C40094 /* anitomy-osx.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2D16007E1E0F44DB00078540 /* anitomy-osx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16007D1E0F44DB00078540 /* anitomy-osx.framework */; };
+		2D16007F1E0F44E400078540 /* anitomy-osx.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16007D1E0F44DB00078540 /* anitomy-osx.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FAD52A51A853C9200DE38B8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAD52A41A853C9200DE38B8 /* AppDelegate.m */; };
 		6FAD52A71A853C9200DE38B8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAD52A61A853C9200DE38B8 /* main.m */; };
 		6FAD52A91A853C9200DE38B8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FAD52A81A853C9200DE38B8 /* Images.xcassets */; };
@@ -33,7 +33,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				59BBCDF11C6FDD7300C40094 /* anitomy-osx.framework in Embed Frameworks */,
+				2D16007F1E0F44E400078540 /* anitomy-osx.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -41,9 +41,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		59BBCDEE1C6FDD4400C40094 /* anitomy-osx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "anitomy-osx.framework"; path = "../../../../../Users/anasutashia/Library/Developer/Xcode/DerivedData/anitomy-osx-hhoewqarfszkrahjdvdaqitygulj/Build/Products/Debug/anitomy-osx.framework"; sourceTree = "<group>"; };
-		59BBCDF01C6FDD7300C40094 /* anitomy-osx.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = "anitomy-osx.framework"; path = "/Users/anasutashia/Library/Developer/Xcode/DerivedData/anitomy-osx-hhoewqarfszkrahjdvdaqitygulj/Build/Products/Debug/anitomy-osx.framework"; sourceTree = "<absolute>"; };
-		6F1C87371A853F4600864FFD /* anitomy-osx.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = "anitomy-osx.framework"; path = "/Users/tailred/Library/Developer/Xcode/DerivedData/anitomy-osx-golueoalqymgteacvwzvxyojzfgf/Build/Products/Debug/anitomy-osx.framework"; sourceTree = "<absolute>"; };
+		2D16007D1E0F44DB00078540 /* anitomy-osx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "anitomy-osx.framework"; path = "../../../../Users/kirimansharo/Library/Developer/Xcode/DerivedData/anitomy-osx-dhhlasawmmotpqakrxltpdamccvs/Build/Products/Debug/anitomy-osx.framework"; sourceTree = "<group>"; };
 		6FAD529E1A853C9200DE38B8 /* anitomy-for-osx-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "anitomy-for-osx-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FAD52A21A853C9200DE38B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FAD52A31A853C9200DE38B8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -61,7 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				59BBCDEF1C6FDD4400C40094 /* anitomy-osx.framework in Frameworks */,
+				2D16007E1E0F44DB00078540 /* anitomy-osx.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,15 +73,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2D16007C1E0F44DA00078540 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2D16007D1E0F44DB00078540 /* anitomy-osx.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		6FAD52951A853C9200DE38B8 = {
 			isa = PBXGroup;
 			children = (
-				59BBCDF01C6FDD7300C40094 /* anitomy-osx.framework */,
-				59BBCDEE1C6FDD4400C40094 /* anitomy-osx.framework */,
-				6F1C87371A853F4600864FFD /* anitomy-osx.framework */,
 				6FAD52A01A853C9200DE38B8 /* anitomi-for-osx-demo */,
 				6FAD52B41A853C9200DE38B8 /* anitomi-for-osx-demoTests */,
 				6FAD529F1A853C9200DE38B8 /* Products */,
+				2D16007C1E0F44DA00078540 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};

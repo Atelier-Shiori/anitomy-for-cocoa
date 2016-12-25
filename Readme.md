@@ -26,9 +26,10 @@ The following filename...
 2. Clone the repo
 3. Type xcodebuild to build the project
 
-##How to use
+##How to use 
+###Objective C
 1. Copy the framework to your XCode Project
-2. Add this to the header file. For Swift projects, create a [bridging header file](http://swiftalicio.us/2014/11/using-cocoapods-from-swift/)
+2. Add this to the header file.
 ```objective-c
 #import <anitomy-osx/anitomy-objc-wrapper.h>
 ```
@@ -38,6 +39,19 @@ To use, simply do the following:
 NSDictionary * d = [[anitomy_bridge alloc] tokenize:@"[Chibiki]_THE_iDOLM@STER_-_01_[720p][C83E5732].mkv"];
 NSLog(@"%@",d);
 ```
+
+##Swift
+1.Copy the framework to your XCode Project
+2.Create a [bridging header file](http://swiftalicio.us/2014/11/using-cocoapods-from-swift/) (e.g. Anitomy-Bridging-Header.h).
+3. Click on your Swift Project and go to Build Settings. Set Install Objective-C Compatability Header to yes and add the bridging header to Objective-C Bridging Header (e.g. anitomy-swift-demo/Anitomy-Bridging_header.h)
+
+To use, simply do the following:
+```swift
+        let d = anitomy_bridge().tokenize("[Chibiki]_THE_iDOLM@STER_-_01_[720p][C83E5732].mkv")
+        print(String(format: "%@", d!))
+```
+
+
 It should output the following:
 ```
 {

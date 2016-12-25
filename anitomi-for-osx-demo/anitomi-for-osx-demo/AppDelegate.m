@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import <anitomy-osx/anitomy-objc-wrapper.h>
+
 
 @interface AppDelegate ()
 

@@ -37,6 +37,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2D1600741E0F3DAF00078540 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2D1600701E0F3DAD00078540 /* anitomy-swift-demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2D1600601E0F3DAD00078540;
+			remoteInfo = "anitomy-swift-demo";
+		};
 		6FBDF4C71AA8DD0D0004FEB3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6F1C87251A853D3A00864FFD /* anitomy-for-osx-demo.xcodeproj */;
@@ -61,6 +68,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2D1600701E0F3DAD00078540 /* anitomy-swift-demo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "anitomy-swift-demo.xcodeproj"; path = "anitomy-swift-demo/anitomy-swift-demo.xcodeproj"; sourceTree = "<group>"; };
 		6F1C87251A853D3A00864FFD /* anitomy-for-osx-demo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "anitomy-for-osx-demo.xcodeproj"; path = "anitomi-for-osx-demo/anitomy-for-osx-demo.xcodeproj"; sourceTree = "<group>"; };
 		6F6792321A851F0B00F79F5A /* options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = options.h; sourceTree = "<group>"; };
 		CEE7D4E51A1A8EFA005DB9C9 /* anitomy-osx.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "anitomy-osx.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -119,6 +127,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2D1600711E0F3DAD00078540 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2D1600751E0F3DAF00078540 /* anitomy-swift-demo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		6FBDF4C31AA8DD0D0004FEB3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -131,6 +147,7 @@
 		CEE7D4DB1A1A8EF9005DB9C9 = {
 			isa = PBXGroup;
 			children = (
+				2D1600701E0F3DAD00078540 /* anitomy-swift-demo.xcodeproj */,
 				CEE7D4EE1A1A8EFA005DB9C9 /* anitomy-osx */,
 				CEE7D5031A1A8EFA005DB9C9 /* anitomy-osxTests */,
 				CEE7D4E71A1A8EFA005DB9C9 /* Frameworks */,
@@ -319,6 +336,10 @@
 					ProductGroup = 6FBDF4C31AA8DD0D0004FEB3 /* Products */;
 					ProjectRef = 6F1C87251A853D3A00864FFD /* anitomy-for-osx-demo.xcodeproj */;
 				},
+				{
+					ProductGroup = 2D1600711E0F3DAD00078540 /* Products */;
+					ProjectRef = 2D1600701E0F3DAD00078540 /* anitomy-swift-demo.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -329,6 +350,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		2D1600751E0F3DAF00078540 /* anitomy-swift-demo.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "anitomy-swift-demo.app";
+			remoteRef = 2D1600741E0F3DAF00078540 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		6FBDF4C81AA8DD0D0004FEB3 /* anitomy-for-osx-demo.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
