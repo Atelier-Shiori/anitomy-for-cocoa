@@ -65,6 +65,8 @@ year = "";
 }
 ```
 
+Full documentation can be viewed [here](http://atelier-shiori.github.io/anitomy-for-cocoa/)
+
 ## How does it work?
 
 Suppose that we're working on the following filename:
@@ -141,7 +143,7 @@ The following projects use the Cocoa port of Anitomy.
 - [anitomy-node](https://github.com/arkenthera/anitomy-node) - Anitomy for Node
 - [anitomyJ](https://github.com/Vorror/anitomyJ) - Anitomy for Java
 
-##Changes to original code
+## Changes to original code
 String.h and String.cpp has been renamed to String2.h and String2.cpp so it will compile under Xcode.
 
 ## License
