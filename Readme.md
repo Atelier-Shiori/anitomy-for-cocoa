@@ -21,13 +21,13 @@ The following filename...
 - Audio term: *FLAC*
 - File checksum: *1234ABCD*
 
-##How to Build
+## How to Build
 1. You will need Xcode 4.2 or later for C++11 support
 2. Clone the repo
 3. Type xcodebuild to build the project
 
-##How to use 
-###Objective C
+## How to use 
+### Objective C
 1. Copy the framework to your XCode Project
 2. Add this to the header file.
 ```objective-c
@@ -40,7 +40,7 @@ NSDictionary * d = [[anitomy_bridge alloc] tokenize:@"[Chibiki]_THE_iDOLM@STER_-
 NSLog(@"%@",d);
 ```
 
-##Swift
+## Swift
 1. Copy the framework to your XCode Project
 2. Create a [bridging header file](http://swiftalicio.us/2014/11/using-cocoapods-from-swift/) (e.g. Anitomy-Bridging-Header.h).
 3. Click on your Swift Project and go to Build Settings. Set Install Objective-C Compatability Header to yes and add the bridging header to Objective-C Bridging Header (e.g. anitomy-swift-demo/Anitomy-Bridging_header.h)

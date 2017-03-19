@@ -21,10 +21,16 @@ CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF32BE);
 const NSStringEncoding kEncoding_wchar_t =
 CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF32LE);
 #endif
+
++(NSDictionary *)tokenize:(NSString *) filename{
+    anitomy_bridge * a = [anitomy_bridge new];
+    return [a tokenize:filename];
+}
+
 -(NSDictionary *)tokenize:(NSString *) filename{
     anitomy::Anitomy anitomy;
     NSData *d = [filename dataUsingEncoding:kEncoding_wchar_t];
-    anitomy.Parse(std::wstring((wchar_t *)[d bytes], [d length] / sizeof(wchar_t)));//"[Ouroboros]_Fullmetal_Alchemist_Brotherhood_-_01.mkv"
+    anitomy.Parse(std::wstring((wchar_t *)d.bytes, d.length / sizeof(wchar_t)));//"[Ouroboros]_Fullmetal_Alchemist_Brotherhood_-_01.mkv"
     
     auto& elements = anitomy.elements();
     
@@ -36,9 +42,18 @@ CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF32LE);
     NSString * group = [self wstringtoNSString:elements.get(anitomy::kElementReleaseGroup)];
     NSString * year = [self wstringtoNSString: elements.get(anitomy::kElementAnimeYear)];
     NSString * releaseversion = [self wstringtoNSString: elements.get(anitomy::kElementReleaseVersion)];
+    NSString * releaseinfo = [self wstringtoNSString:elements.get(anitomy::  kElementReleaseInformation)];
     NSString * videoterm = [self wstringtoNSString: elements.get(anitomy::kElementVideoTerm)];
     NSString * videosource = [self wstringtoNSString: elements.get(anitomy::kElementSource)];
+    NSString * videoresolution = [self wstringtoNSString:elements.get(anitomy::kElementVideoResolution)];
+    NSString * volumenum = [self wstringtoNSString: elements.get(anitomy::kElementVolumeNumber)];
+    NSString * volumeprefix = [self wstringtoNSString: elements.get(anitomy::kElementVolumePrefix)];
+    NSString * language = [self wstringtoNSString: elements.get(anitomy::kElementLanguage)];
+    NSString * subtitles = [self wstringtoNSString: elements.get(anitomy::kElementLanguage)];
     NSString * season = [self wstringtoNSString:elements.get(anitomy::kElementAnimeSeason)];
+    NSString * filetype = [self wstringtoNSString:elements.get(anitomy::kElementFileExtension)];
+    NSString * filechecksum = [self wstringtoNSString:elements.get(anitomy::kElementFileChecksum)];
+    NSString * rfilename = [self wstringtoNSString:elements.get(anitomy::kElementFileName)];
     // Populate Anime Types, if exists
     NSMutableArray * animetype = [[NSMutableArray alloc]init];
     if (!elements.empty(anitomy::kElementAnimeType)) {
@@ -47,7 +62,7 @@ CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF32LE);
             [animetype addObject:[self wstringtoNSString:anime_type]];
         }
     }
-    NSDictionary * dic = [[NSDictionary alloc] initWithObjectsAndKeys:title,@"title",episode,@"episode", episodetitle, @"episodetitle", episodetype, @"episodetype",group,@"group",year,@"year",releaseversion, @"releaseversion", videoterm,@"videoterm", videosource, @"videosource", season, @"season", animetype, @"type", nil];
+    NSDictionary * dic = @{@"title": title,@"episode": episode, @"episodetitle": episodetitle, @"episodetype": episodetype,@"group": group,@"year": year,@"releaseversion": releaseversion, @"releaseinfo": releaseinfo, @"videoterm": videoterm, @"videosource": videosource, @"videoresolution": videoresolution, @"season": season, @"type": animetype, @"volumenum": volumenum, @"volumeprefix": volumeprefix, @"language": language, @"subtitles": subtitles, @"filetype": filetype, @"filechecksum": filechecksum, @"filename": rfilename};
     // Clear Elements
     elements.clear();
     // Return Value
