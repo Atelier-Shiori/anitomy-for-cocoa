@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>anitomy_bridge  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a title="anitomy_bridge  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">anitomy_bridge Docs</a> (100% documented)</p>
+        <p class="header-right"><a href="https://github.com/Atelier-Shiori/anitomy-for-cocoa"><img src="img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right"><a href="dash-feed://hhttps%3A%2F%2Fatelier%2Dshiori%2Egithub%2Eio%2Fanitomy%2Dfor%2Dcocoa%2Fdocsets%2Fanitomy_bridge%2Exml"><img src="img/dash.png"/>Install in Dash</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html">anitomy_bridge Reference</a>
+        <img id="carat" src="img/carat.png" />
+        anitomy_bridge  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/anitomy_bridge.html">anitomy_bridge</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            
+            <a href='#anitomy-for-cocoa' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h1 id='anitomy-for-cocoa'>Anitomy for Cocoa</h1>
+
+<p>This is a OS X port of <a href="https://github.com/erengy/anitomy"><em>Anitomy</em></a>, which is a C++ library for parsing anime video filenames. It&rsquo;s accurate, fast, and simple to use. This port allows you to use <em>Anitomy</em> in Objective C and Swift projects.</p>
+<a href='#examples' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='examples'>Examples</h2>
+
+<p>The following filename&hellip;</p>
+
+<p>[TaigaSubs]<em>Toradora!</em>(2008)<em>-_01v2</em>-<em>Tiger_and_Dragon</em>[1280x720_H.264_FLAC][1234ABCD].mkv</p>
+
+<p>&hellip;is resolved into these elements:</p>
+
+<ul>
+<li>Release group: <em>TaigaSubs</em></li>
+<li>Anime title: <em>Toradora!</em></li>
+<li>Anime year: <em>2008</em></li>
+<li>Episode number: <em>01</em></li>
+<li>Release version: <em>2</em></li>
+<li>Episode title: <em>Tiger and Dragon</em></li>
+<li>Video resolution: <em>1280x720</em></li>
+<li>Video term: <em>H.264</em></li>
+<li>Audio term: <em>FLAC</em></li>
+<li>File checksum: <em>1234ABCD</em></li>
+</ul>
+<a href='#how-to-build' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='how-to-build'>How to Build</h2>
+
+<ol>
+<li>You will need Xcode 4.2 or later for C++11 support</li>
+<li>Clone the repo</li>
+<li>Type xcodebuild to build the project</li>
+</ol>
+<a href='#how-to-use' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='how-to-use'>How to use</h2>
+<a href='#objective-c' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='objective-c'>Objective C</h3>
+
+<ol>
+<li>Copy the framework to your XCode Project</li>
+<li>Add this to the header file.
+<code>objective-c
+#import &lt;anitomy-osx/anitomy-objc-wrapper.h&gt;
+</code></li>
+</ol>
+
+<p>To use, simply do the following:
+<code>objective-c
+NSDictionary * d = [[anitomy_bridge alloc] tokenize:@&quot;[Chibiki]_THE_iDOLM@STER_-_01_[720p][C83E5732].mkv&quot;];
+NSLog(@&quot;%@&quot;,d);
+</code></p>
+<a href='#swift' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='swift'>Swift</h2>
+
+<ol>
+<li>Copy the framework to your XCode Project</li>
+<li>Create a <a href="http://swiftalicio.us/2014/11/using-cocoapods-from-swift/">bridging header file</a> (e.g. Anitomy-Bridging-Header.h).</li>
+<li>Click on your Swift Project and go to Build Settings. Set Install Objective-C Compatability Header to yes and add the bridging header to Objective-C Bridging Header (e.g. anitomy-swift-demo/Anitomy-Bridging_header.h)</li>
+</ol>
+
+<p>To use, simply do the following:
+<code>swift
+let d = anitomy_bridge().tokenize(&quot;[Chibiki]_THE_iDOLM@STER_-_01_[720p][C83E5732].mkv&quot;)
+print(String(format: &quot;%@&quot;, d!))
+</code></p>
+
+<p>It should output the following:
+<code>
+{
+episode = 01;
+group = Chibiki;
+releaseversion = &quot;&quot;;
+title = &quot;THE iDOLM@STER&quot;;
+videosource = &quot;&quot;;
+videoterm = &quot;&quot;;
+year = &quot;&quot;;
+}
+</code></p>
+<a href='#how-does-it-work' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='how-does-it-work'>How does it work?</h2>
+
+<p>Suppose that we&rsquo;re working on the following filename:</p>
+
+<p><q>Spice_and_Wolf_Ep01_[1080p,BluRay,x264]_-_THORA.mkv</q></p>
+
+<p>The filename is first stripped off of its extension and split into groups. Groups are determined by the position of brackets:</p>
+
+<p><q>Spice_and_Wolf_Ep01_</q>, <q>1080p,BluRay,x264</q>, <q>_-_THORA</q></p>
+
+<p>Each group is then split into tokens. In our current example, the delimiter for the enclosed group is <code>,</code>, while the words in other groups are separated by <code>_</code>:</p>
+
+<p><q>Spice</q>, <q>and</q>, <q>Wolf</q>, <q>Ep01</q>, <q>1080p</q>, <q>BluRay</q>, <q>x264</q>, <q>-</q>, <q>THORA</q></p>
+
+<p>Note that brackets and delimiters are actually stored as tokens. Here, identified tokens are omitted for our convenience.</p>
+
+<p>Once the tokenizer is done, the parser comes into effect. First, all tokens are compared against a set of known patterns and keywords. This process generally leaves us with nothing but the release group, anime title, episode number and episode title:</p>
+
+<p><q>Spice</q>, <q>and</q>, <q>Wolf</q>, <q>Ep01</q>, <q>-</q></p>
+
+<p>The next step is to look for the episode number. Each token that contains a number is analyzed. Here, <code>Ep01</code> is identified because it begins with a known episode prefix:</p>
+
+<p><q>Spice</q>, <q>and</q>, <q>Wolf</q>, <q>-</q></p>
+
+<p>Finally, remaining tokens are combined to form the anime title, which is <code>Spice and Wolf</code>. The complete list of elements identified by <em>Anitomy</em> is as follows:</p>
+
+<ul>
+<li>Anime title: <em>Spice and Wolf</em></li>
+<li>Episode number: <em>01</em></li>
+<li>Video resolution: <em>1080p</em></li>
+<li>Source: <em>BluRay</em></li>
+<li>Video term: <em>x264</em></li>
+<li>Release group: <em>THORA</em></li>
+</ul>
+<a href='#why-should-i-use-it' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='why-should-i-use-it'>Why should I use it?</h2>
+
+<p>Anime video files are commonly named in a format where the anime title is followed by the episode number, and all the technical details are enclosed within brackets. However, fansub groups tend to use their own naming conventions, and the problem is more complicated than it first appears:</p>
+
+<ul>
+<li>Element order is not always the same.</li>
+<li>Technical information is not guaranteed to be enclosed.</li>
+<li>Brackets and parentheses may be grouping symbols or a part of the anime/episode title.</li>
+<li>Space and underscore are not the only delimiters in use.</li>
+<li>A single filename may contain multiple delimiters.</li>
+</ul>
+
+<p>There are so many cases to cover that it&rsquo;s simply not possible to parse all filenames solely with regular expressions. <em>Anitomy</em> tries a different approach, and it succeeds: It&rsquo;s able to parse tens of thousands of filenames per second, with great accuracy.</p>
+<a href='#are-there-any-exceptions' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='are-there-any-exceptions'>Are there any exceptions?</h2>
+
+<p>Yes, unfortunately. <em>Anitomy</em> fails to identify the anime title and episode number on rare occasions, mostly due to bad naming conventions. See the examples below.</p>
+
+<p>Arigatou.Shuffle!.Ep08.[x264.AAC][D6E43829].mkv</p>
+
+<p>Here, <em>Anitomy</em> would report that this file is the 8th episode of <code>Arigatou Shuffle!</code>, where <code>Arigatou</code> is actually the name of the fansub group.</p>
+
+<p>Spice and Wolf 2</p>
+
+<p>Is this the 2nd episode of <code>Spice and Wolf</code>, or a batch release of <code>Spice and Wolf 2</code>? Without a file extension, there&rsquo;s no way to know. It&rsquo;s up to you consider both cases.</p>
+<a href='#suggestions-to-fansub-groups' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='suggestions-to-fansub-groups'>Suggestions to fansub groups</h2>
+
+<p>Please consider abiding by these simple rules before deciding on your naming convention:</p>
+
+<ul>
+<li>Don&rsquo;t enclose anime title, episode number and episode title within brackets. Enclose everything else, including the name of your group.</li>
+<li>Don&rsquo;t use parentheses to enclose release information; use square brackets instead. Parentheses should only be used if they are a part of the anime/episode title.</li>
+<li>Don&rsquo;t use multiple delimiters in a single filename. If possible, stick with either space or underscore.</li>
+<li>Use a separator (e.g. a dash) between anime title and episode number. There are anime titles that end with a number, which creates ambiguity.</li>
+<li>Indicate the episode interval in batch releases.</li>
+</ul>
+<a href='#who-uses-anitomy-for-cocoa' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='who-uses-anitomy-for-cocoa'>Who uses Anitomy for Cocoa?</h2>
+
+<p>The following projects use the Cocoa port of Anitomy.
+- <a href="https://github.com/Atelier-Shiori/malupdaterosx-cocoa">MAL Updater OS X</a>
+- <a href="https://github.com/Atelier-Shiori/hachidori">Hachidori</a></p>
+<a href='#other-ports-of-anitomy' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='other-ports-of-anitomy'>Other Ports of Anitomy</h2>
+
+<ul>
+<li><a href="https://github.com/arkenthera/anitomy-node">anitomy-node</a> - Anitomy for Node</li>
+<li><a href="https://github.com/Vorror/anitomyJ">anitomyJ</a> - Anitomy for Java</li>
+</ul>
+<a href='#changes-to-original-code' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='changes-to-original-code'>Changes to original code</h2>
+
+<p>String.h and String.cpp has been renamed to String2.h and String2.cpp so it will compile under Xcode.</p>
+<a href='#license' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='license'>License</h2>
+
+<p>The port of <em>Anitomy</em> for Cocoa is licensed under the same license as the <a href="https://github.com/erengy/anitomy">orginal code</a>, Mozilla Public License 2.0. Anitomy is by Eren Okka.</p>
+
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2017 <a class="link" href="https://ateliershiori.moe" target="_blank" rel="external">Atelier Shiori</a>. All rights reserved. (Last updated: 2017-03-19)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
