@@ -104,6 +104,7 @@
 				TargetAttributes = {
 					2D16005F1E0F3DAD00078540 = {
 						CreatedOnToolsVersion = 8.0;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -262,7 +263,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "moe.ateliershiori.anitomy-swift-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "anitomy-swift-demo/Anitomy-Bridging_header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -277,7 +278,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "moe.ateliershiori.anitomy-swift-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "anitomy-swift-demo/Anitomy-Bridging_header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -300,6 +301,7 @@
 				2D16006F1E0F3DAD00078540 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

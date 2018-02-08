@@ -23,9 +23,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
-    func windowWillClose(_ aNotification: Notification) {
+    @objc func windowWillClose(_ aNotification: Notification) {
         // Close Application if window is closed
-        NSApplication.shared().terminate(nil)
+        NSApplication.shared.terminate(nil)
     }
     @IBAction func recognize(sender : NSButton){
         let op = NSOpenPanel()
@@ -33,7 +33,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         op.title = "Select Media File"
         op.message = "Select a media file to test."
         let result = op.runModal()
-        if result == NSFileHandlingPanelCancelButton{
+        if result.rawValue == NSFileHandlingPanelCancelButton{
             return;
         }
         let d = anitomy_bridge().tokenize(op.url?.lastPathComponent)
